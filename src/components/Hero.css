@@ -1,0 +1,76 @@
+
+.hero-container {
+  display: grid;
+  grid-template-columns: 22rem 1fr;
+  grid-template-areas:
+    'hero-title hero-img'
+    'hero-sub hero-img'
+    'hero-text hero-img'
+    'hero-button hero-img';
+}
+
+.hero-container > h1 {
+  grid-area: hero-title;
+}
+.hero-container > h2 {
+  grid-area: hero-sub;
+}
+.hero-container > p {
+  grid-area: hero-text;
+}
+.hero-container > button {
+  grid-area: hero-button;
+}
+.hero-container > img {
+  grid-area: hero-img;
+  width: 100%;
+  height: auto;
+  max-width: 25rem;
+  max-height: 25rem;
+  aspect-ratio: 1;
+  justify-self: end;
+  align-self: start;
+  object-fit: cover;
+  border-radius: 1rem;
+}
+
+@media screen and (min-width: 35rem) and (max-width: 49rem) {
+  .hero-container {
+    grid-template-columns: 1fr 1fr;
+  }
+  .hero-container > img {
+    width: 14.5rem;
+  }
+}
+
+@media screen and (min-width: 30rem) and (max-width: 35rem) {
+  .hero-container {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: 
+      'hero-title hero-img'
+      'hero-sub hero-img'
+      'hero-text hero-text'
+      'hero-button hero-button';
+  }
+  .hero-container > img {
+    width: 14.5rem;
+    justify-self: center;
+  }
+}
+
+@media screen and (max-width: 30rem) {
+  .hero-container {
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+      'hero-title'
+      'hero-sub'
+      'hero-img'
+      'hero-text'
+      'hero-button';
+  }
+  .hero-container > img {
+    min-width: 10rem;
+    max-width: 14.5rem;
+    justify-self: start;
+  }
+}

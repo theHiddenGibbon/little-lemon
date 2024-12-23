@@ -1,0 +1,43 @@
+.specials {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 5rem;
+  grid-template-rows: subgrid;
+  grid-row: auto / span 5;
+  gap: 1rem;
+  align-items: start;
+  border-radius: 16px;
+  background-color: pink;
+  scroll-snap-align: start;
+  padding: 1rem;
+}
+
+.specials > .img-container {
+  grid-column: span 2;
+  margin: -1rem -1rem 0;
+}
+
+.specials > .img-container > img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 16px 16px 0 0;
+}
+
+.specials > h3 {
+  grid-column: span 1;
+  align-self: center;
+}
+.specials > h4  {
+  grid-column: span 1;
+  align-self: center;
+  justify-self: end;
+}
+
+.specials > p,
+.specials > button {
+  grid-column: span 2;
+}
+.specials > button {
+  width: 80%;
+  justify-self: center;
+}

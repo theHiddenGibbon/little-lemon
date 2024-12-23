@@ -1,0 +1,46 @@
+menu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.nav-bar > li {
+  padding-left: 0.25rem;
+  white-space: nowrap;
+}
+
+.nav-bar > li > a {
+  padding: 0.25rem;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+@media screen and (min-width:35rem) and (max-width:49rem) {
+  .nav-bar {
+    width: 100%;
+    justify-content: center;
+    padding: 0.25em;
+  }
+  .nav-bar > li {
+    padding: 0 0.125rem;
+  }
+}
+
+@media screen and (max-width:35rem) {
+  .nav-bar {
+    display: inline;
+    width: 100%;
+    display: none;
+  }
+  .nav-bar > li {
+    padding: 0.5rem 0;
+  }
+}
+

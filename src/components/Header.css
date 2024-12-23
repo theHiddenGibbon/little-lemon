@@ -1,0 +1,39 @@
+header {
+  align-items: center;
+}
+
+.head-nav  {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.burger {
+  display: none;
+  width: 0;
+}
+
+.logo {
+  width: 11rem;
+}
+
+@media screen and (max-width: 35rem) {
+  .burger {
+    display: block;
+    border: 1px solid black;
+    width: auto;
+    height: 1.5rem;
+    padding: 0.25rem;
+    margin-right: 1rem;
+  }
+  .logo {
+    flex-shrink: 1;
+    max-width: 100%;
+  }
+}

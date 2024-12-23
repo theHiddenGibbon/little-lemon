@@ -1,15 +1,15 @@
-import Hero from "./Hero";
-import Specials from "./Specials";
-import Testimonials from "./Testimonials";
-import About from "./About";
+import Hero from './Hero.js';
+import Specials from './Highlights.js';
+import Testimonials from './Testimonials.js';
+import AboutUs from './AboutUs.js';
 
 const Main = () => {
   return(
-    <main>
+    <main className="content-grid">
       <Hero />
       <Specials />
       <Testimonials />
-      <About />
+      <AboutUs />
     </main>
   );
 };

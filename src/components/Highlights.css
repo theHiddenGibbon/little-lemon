@@ -1,0 +1,30 @@
+.highlights {
+  display: grid;
+  grid-template-columns:  1fr 1fr;
+  grid-template-areas: 
+    'highlight-title highlight-button'
+    'carousel carousel';
+  justify-content: start;
+  align-items: center;
+}
+.highlights > h2 {
+  grid-area: highlight-title;
+}
+.highlights > button {
+  grid-area: highlight-button;
+  justify-self: end;
+}
+
+@media screen and (max-width:35rem) {
+  .highlights {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+      'highlight-title'
+      'carousel'
+      'highlight-button';
+  }
+  .highlights > button {
+    justify-self: start;
+  }
+}
