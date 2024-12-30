@@ -1,44 +1,114 @@
 .about-us {
   display: grid;
-  grid-template-columns: 23rem 1fr;
+  grid-template-columns: minmax(auto, 23rem) 1fr;
+  grid-auto-rows: min-content;
   grid-template-areas:
     'about-title about-img'
     'about-text1 about-img'
     'about-text2 about-img'
-    'about-link about-img';
-  gap: 2rem;
+    'about-link about-img'
+    '. about-img';
+  column-gap: 2rem;
+  row-gap: 1rem;
 }
 
-.about-us > h2 {
+.about-us > h3 {
   grid-area: about-title;
 }
+
 .about-us > p:nth-of-type(1) {
   grid-area: about-text1;
 }
+
 .about-us > p:nth-of-type(2) {
   grid-area: about-text2;
 }
-.about-us > a {
+
+.about-link {
   grid-area: about-link;
+  justify-self: end;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
+  transition: all 0.25s ease;
+  color: var(--primary1);
+}
+
+.about-link:hover,
+.about-link:active {
+  background-color: var(--primary2);
 }
 
 .about-image-container {
   grid-area: about-img;
+  margin-top: -2rem;
+  display: grid;
+  grid-template-rows: auto;
+  position: relative;
 }
 
 .about-image-container > img {
   object-fit: cover;
-  max-width: 100%;
+  border: 2px solid white;
+  max-height: 12.5rem;
+  max-width: 65%;
+  min-width: 12.5rem;
+  width: auto;
+  align-self: start;
 }
 
-@media screen and (max-width: 49rem){
+.about-image-container :nth-child(1) {
+  z-index: 3;
+}
+.about-image-container :nth-child(2) {
+  margin-top: -2rem;
+  justify-self: end;
+  z-index: 2;
+}
+.about-image-container :nth-child(3) {
+  margin-top: -2rem;
+  z-index: 1;
+}
+
+@media screen and (min-width: 40.0001rem) and (max-width:55rem) {
+  .about-image-container {
+    margin-top: -1rem;
+    grid-template-rows: min-content min-content auto;
+  }
+  .about-image-container > img {
+    max-height: 10rem;
+    max-width: 100%;
+  }
+  .about-image-container :nth-child(2),
+  .about-image-container :nth-child(3) {
+    margin-top: 0;
+  }
+}
+
+@media screen and (max-width:40rem) {
   .about-us {
-    grid-template-columns: 1fr;
+    grid-template-columns: auto;
     grid-template-areas:
     'about-title'
     'about-text1'
     'about-text2'
     'about-link'
     'about-img';
+  }
+  .about-image-container {
+    margin-top: 1rem;
+  }
+  .about-image-container > img {
+    max-height: 12.5rem;
+    max-width: 65%;
+  }
+}
+
+@media screen and (max-width:35rem) {
+  .about-image-container > img {
+    max-width: 100%;
+  }
+  .about-image-container :nth-child(2),
+  .about-image-container :nth-child(3) {
+    margin-top: 0;
   }
 }

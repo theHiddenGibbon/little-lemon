@@ -3,7 +3,7 @@ import Food from  '../images/restaurant-food.jpg';
 
 const Hero = () => {
   return(
-    <section className="full-width bg-green">
+    <section className="full-width hero bg-green">
       <div className="hero-container">
         <h1>Little Lemon</h1>
         <h2>Chicago</h2>

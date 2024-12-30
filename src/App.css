@@ -1,3 +1,80 @@
+:root {
+  --primary1: #495e57;
+  --primary2: #f4ce14;
+  --secondary1: #ee9972;
+  --secondary2: #fbdabb;
+  --secondary3: #edefee;
+  --secondary4: #333333;
+}
+
+*:focus,
+button:hover {
+  outline: 2px solid var(--primary1);
+  box-shadow: 
+    0 0 3px 5px var(--primary2),
+    0 0 1px 1px var(--primary2) inset;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+  line-height: 0.8;
+}
+
+h1 { /*display title*/
+  font-size: 4rem;
+  font-weight: 500;
+  font-family: 'Markazi Text', serif;
+  color: var(--primary2);
+}
+h2 { /*subtitle*/
+  font-size: 2.5rem;
+  font-weight: 400;
+  font-family: 'Markazi Text', serif;
+}
+h3 { /*section title*/
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-family: 'Karla', sans-serif;
+}
+h4 { /*section category*/
+  font-size: 1rem;
+  font-weight: 800;
+  font-family: 'Karla', sans-serif;
+}
+h5 { /*card title*/
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-family: 'Karla', sans-serif;
+}
+p {
+  font-size: 1rem;
+  line-height: 1.5;
+  font-family: 'Karla', sans-serif;
+  max-width: 55ch;
+  margin: 0;
+}
+.lead-text,
+.action-button {
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+.highlight {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+ul, li {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+button {
+  cursor: pointer;
+}
+
 .content-grid, 
 .full-width {
   display: grid;
@@ -39,33 +116,38 @@
 }
 
 .action-button {
-  width: 10rem;
-  height: 4rem;
+  width: 12.5rem;
+  height: 3rem;
   border-radius: 1rem;
   border: none;
-  background-color: yellow;
-}
-
-h1, h2, h3, h4, h5, h6, p {
-  margin: 0;
-}
-
-
-ul, li {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
+  background-color: var(--primary2);
+  text-transform: uppercase;
 }
 
 .no-wrap {
   white-space: nowrap;
-  width: 100%;
+  display: inline-block;
 }
 
 .wrap {
   word-break: break-word;
+  display: inline-block;
 }
 
 .bg-green {
-  background-color: green;
+  background-color: var(--primary1);
+}
+
+section {
+  padding: 4rem 0;
+}
+@media screen and (min-width: 55rem) {
+  section {
+    padding: 6rem 0;
+  }
+}
+@media screen and (max-width: 35rem) {
+  section {
+    padding: 2rem 0;
+  }
 }

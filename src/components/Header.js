@@ -8,7 +8,9 @@ const Header = () => {
     <header className="content-grid">
       <nav className="head-nav">
         <div className="logo-container">
-          <img src={Burger} alt="Menu icon" className="burger" />
+          <button className="burger">
+            <img src={Burger} alt="Menu icon" className="burger-icon" />
+          </button>
           <img src={Logo} alt="Little Lemon logo" className="logo" />
         </div>
         <NavList class="nav-bar" />

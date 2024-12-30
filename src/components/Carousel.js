@@ -5,13 +5,13 @@ const specialsData = [
   {
     title: "Bruschetta",
     description: "Our Bruschetta is made from grilled bread that has been smeared with garlic and seasoned with salt and olive oil.",
-    price: "$7.99",
+    price: "$4.99",
     image: "../../dynamic-images/bruschetta.jpg"
   },
   {
     title: "Greek Salad",
     description: "The famous greek salad of crispy lettuce, peppers, olives and our Chicago style feta cheese, garnished with crunchy garlic and rosemary croutons.",
-    price: "$15.99",
+    price: "$11.99",
     image: "../../dynamic-images/greek-salad.jpg"
   },
   {

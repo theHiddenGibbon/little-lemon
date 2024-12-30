@@ -1,5 +1,6 @@
 .testimonials {
-  background-color: lightgrey;
+  background-color: var(--secondary3);
+  row-gap: 2rem;
 }
 
 .testimonial-list {
@@ -13,35 +14,42 @@
 }
 
 .testimonial-card-inactive {
-  border: 1px solid grey;
+  outline: 1px solid var(--secondary3);
 }
+
 .testimonial-card-active {
-  border: 1px solid grey;
+  border: 1px solid var(--secondary3);
   border-bottom: none;
 }
+
 .user-card {
   background-color: white;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding: 1rem;
   width: 100%;
   height: 100%;
 }
+
 .testimonial-card-inactive > .user-card {
   opacity: 0.25;
 }
 
+.user-card > h5 {
+  text-align: center;
+}
+
 .user-card > img {
-  width: 100%;
+  width: 90%;
   border-radius: 50%;
 }
 
 .review {
   background-color: white;
-  border: 1px solid grey;
+  border: 1px solid var(--secondary3);
   border-top: 0;
   padding: 1rem;
   display: flex;
@@ -62,6 +70,7 @@
 .testimonial3 {
   grid-area: testimonial3;
 }
+
 .review0 {
   grid-area: review;
 }
@@ -85,11 +94,13 @@
       'testimonial3'
       'review3';
   }
+
   .review1,
   .review2,
   .review3 {
     display: none;
   }
+  
   .review0 {
     grid-area: review0;
   }
@@ -102,11 +113,15 @@
   .review3 {
     grid-area: review3;
   }
-  
+
+  .user-card > h5 {
+    text-align: left;
+  }
+
   .testimonial-card-active > .user-card > img {
     max-width: 12.5rem;
-
   }
+
   .testimonial-card-inactive > .user-card {
     background-color: white;
     display: flex;
@@ -117,7 +132,8 @@
     width: 100%;
     height: 100%;
   }
-.testimonial-card-inactive > .user-card > img {
+
+  .testimonial-card-inactive > .user-card > img {
     width: 20%;
     border-radius: 0;
   }

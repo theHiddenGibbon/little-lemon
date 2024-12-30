@@ -4,10 +4,11 @@
   grid-template-areas: 
     'highlight-title highlight-button'
     'carousel carousel';
+  row-gap: 2rem;
   justify-content: start;
   align-items: center;
 }
-.highlights > h2 {
+.highlights > h3 {
   grid-area: highlight-title;
 }
 .highlights > button {
@@ -21,8 +22,8 @@
     grid-template-columns: 1fr;
     grid-template-areas: 
       'highlight-title'
-      'carousel'
-      'highlight-button';
+      'highlight-button'
+      'carousel';
   }
   .highlights > button {
     justify-self: start;

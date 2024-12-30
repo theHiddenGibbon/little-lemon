@@ -1,21 +1,22 @@
 .carousel {
   width: 100%;
-  padding: 0 calc(100% / 12);
+  padding: 1rem calc(100% / 12);
+  border: 2px solid var(--secondary3);
+  border-left: none;
+  border-right: none;
+  margin-bottom: 2rem;
   display: grid;
-  grid-template-columns: repeat(5, max(30%, 12.5rem));
-  column-gap: 5%;
+  grid-template-columns: repeat(5, max(31.5%, 12.5rem));
+  grid-template-rows: auto;
+  column-gap: 2.75%;
   overflow-x: auto;
   scroll-behavior: smooth;
   overscroll-behavior-x: auto;
   overscroll-behavior-y: auto;
   scroll-snap-type: x mandatory;
   scroll-padding: calc(100% / 12);
-
   position: relative;
-  grid-template-rows: auto;
   z-index: 1;
-
-  padding-bottom: 1rem;
 }
 
 .carousel-container {
@@ -24,11 +25,11 @@
 
 .overlay {
   position: absolute;
-  top: 0;
-  bottom: 1rem;
-  height: calc(100% - 1rem);
-  width: 8.33%;
   z-index: 2;
+  top: 1rem;
+  bottom: 1rem;
+  height: calc(100% - 4rem);
+  width: 8.33%;
   font-size: 5rem;
   display: flex;
   align-items: center;
@@ -38,26 +39,24 @@
 }
 .overlay.scroll-left {
   left: 0;
-  background: 
-    linear-gradient(
-      to right, 
+  background: linear-gradient(
+      to right,
       rgba(255, 255, 255, 1) 0%,
       rgba(255, 255, 255, 0.9) 5%,
-      rgba(255, 255, 255, 0.5) 50%,
-      rgba(255, 255, 255, 0.2) 95%,
-      rgba(255, 255, 255, 0) 100%
+      rgba(255, 255, 255, 0.6) 50%,
+      rgba(255, 255, 255, 0.3) 95%,
+      rgba(255, 255, 255, 0.1) 100%
     );
 }
 .overlay.scroll-right {
   right: 0;
-  background: 
-    linear-gradient(
+  background: linear-gradient(
       to left,
       rgba(255, 255, 255, 1) 0%,
       rgba(255, 255, 255, 0.9) 5%,
-      rgba(255, 255, 255, 0.5) 50%,
-      rgba(255, 255, 255, 0.2) 95%,
-      rgba(255, 255, 255, 0) 100%
+      rgba(255, 255, 255, 0.6) 50%,
+      rgba(255, 255, 255, 0.3) 95%,
+      rgba(255, 255, 255, 0.1) 100%
     );
 }
 
@@ -65,11 +64,13 @@
   border-radius: 50%;
   width: 3rem;
   height: 3rem;
-  background-color: rgba(0, 0, 0, 0.5); 
+  background-color: rgba(0, 0, 0, 0.5);
   border: 0;
   color: rgba(255, 255, 255, 0.8);
   font-size: 1rem;
   position: absolute;
+  pointer-events: visible;
+  z-index: 3;
 }
 .overlay.scroll-right > button  {
   right: 1rem;
@@ -79,7 +80,12 @@
 }
 
 @media screen and (max-width:35rem) {
-  .overlay > button {
-    bottom: -4rem;
+  .overlay.scroll-right > button  {
+    right: calc(100% + 1rem);
+    bottom: -4.5rem;
+  }
+  .overlay.scroll-left > button  {
+    left: calc(100% + 1rem);
+    bottom: -4.5rem;
   }
 }

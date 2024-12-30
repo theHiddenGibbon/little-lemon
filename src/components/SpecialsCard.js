@@ -1,4 +1,5 @@
 import './SpecialsCard.css';
+import PlusIcon from '../icons/circle-plus-solid.svg';
 
 const Carousel = (props) => {
   return(
@@ -6,10 +7,16 @@ const Carousel = (props) => {
       <div className="img-container">
         <img src={`${props.image}`} alt={props.title} />
       </div>
-      <h3>{props.title}</h3>
-      <h4>{props.price}</h4>
+      <h5>{props.title}</h5>
+      <span className="highlight-text">{props.price}</span>
       <p>{props.description}</p>
-      <button>order online</button>
+
+      <div className="add-to-order">
+        <span className="highlight">Add to order</span>
+        <button>  
+          <img src={PlusIcon} alt="+" />
+        </button>
+      </div>
     </li>
   );
 };

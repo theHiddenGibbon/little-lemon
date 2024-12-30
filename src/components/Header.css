@@ -1,5 +1,5 @@
 header {
-  align-items: center;
+  padding: 1rem 0;
 }
 
 .head-nav  {
@@ -7,33 +7,42 @@ header {
   flex-direction: row;
   justify-content: space-between;
   flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .logo-container {
   display: flex;
   align-items: center;
+  gap: 1rem;
 }
 
 .burger {
   display: none;
-  width: 0;
+  border: none;
+  background: none;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
+  width: 3rem;
+  min-width: 2rem;
+  flex-shrink: 1;
+  align-items: center;
+  justify-content: center;
 }
 
 .logo {
-  width: 11rem;
+  width: 15rem;
+  flex-shrink: 1;
 }
 
 @media screen and (max-width: 35rem) {
   .burger {
-    display: block;
-    border: 1px solid black;
-    width: auto;
-    height: 1.5rem;
-    padding: 0.25rem;
-    margin-right: 1rem;
+    display: inline-flex;
+  }
+  .burger-icon {
+    width: 100%;
+    aspect-ratio: 1 / 1;
   }
   .logo {
-    flex-shrink: 1;
     max-width: 100%;
   }
 }

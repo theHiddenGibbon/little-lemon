@@ -2,10 +2,17 @@ menu {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  display: flex;
+}
+
+menu a {
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
 }
 
 .nav-bar {
-  display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
@@ -16,13 +23,19 @@ menu {
   white-space: nowrap;
 }
 
-.nav-bar > li > a {
-  padding: 0.25rem;
-  text-transform: uppercase;
-  text-decoration: none;
+.nav-bar a {
+  font: 1em 'Karla', sans-serif;
+  font-weight: 500;
+  color: var(--primary1);
+  transition: all 0.25s ease;
+}
+.nav-bar a:hover,
+.nav-bar a:active {
+  background-color: var(--primary2);
+  text-decoration: underline;
 }
 
-@media screen and (min-width:35rem) and (max-width:49rem) {
+@media screen and (min-width:calc(35rem + 1px)) and (max-width:55rem) {
   .nav-bar {
     width: 100%;
     justify-content: center;
@@ -35,7 +48,6 @@ menu {
 
 @media screen and (max-width:35rem) {
   .nav-bar {
-    display: inline;
     width: 100%;
     display: none;
   }
@@ -44,3 +56,9 @@ menu {
   }
 }
 
+.footer-nav {
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  margin-left: -0.25rem;
+}

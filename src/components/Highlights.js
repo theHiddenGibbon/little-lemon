@@ -4,7 +4,8 @@ import Carousel from './Carousel.js';
 const Highlights = () => {
   return(
     <section className="highlights breakout">
-      <h2>Highlights</h2>
+      <h3>Highlights</h3>
+      <button className="action-button">Online Menu</button>
       <div className="breakout carousel-container">
         <div className="overlay scroll-left">
           <button className="left">◀</button>
@@ -14,7 +15,6 @@ const Highlights = () => {
           <button className="right">▶</button>
         </div>
       </div>
-      <button className="action-button">Online Menu</button>
     </section>
   );
 };
