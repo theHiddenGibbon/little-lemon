@@ -35,7 +35,7 @@ menu a {
   text-decoration: underline;
 }
 
-@media screen and (min-width:calc(35rem + 1px)) and (max-width:55rem) {
+@media screen and (min-width:35.0001rem) and (max-width:55rem) {
   .nav-bar {
     width: 100%;
     justify-content: center;
@@ -50,6 +50,12 @@ menu a {
   .nav-bar {
     width: 100%;
     display: none;
+  }
+  .nav-bar.visible {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: white; 
   }
   .nav-bar > li {
     padding: 0.5rem 0;
