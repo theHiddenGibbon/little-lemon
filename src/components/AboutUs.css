@@ -24,6 +24,11 @@
   grid-area: about-text2;
 }
 
+.about-long {
+  display: grid;
+  gap: 1rem;
+}
+
 .about-link {
   grid-area: about-link;
   justify-self: end;
@@ -31,6 +36,9 @@
   padding: 0.25rem;
   transition: all 0.25s ease;
   color: var(--primary1);
+}
+.reserve {
+  margin: 0 -0.25rem;
 }
 
 .about-link:hover,
@@ -57,29 +65,36 @@
 }
 
 .about-image-container :nth-child(1) {
-  z-index: 3;
+  z-index: 5;
 }
 .about-image-container :nth-child(2) {
   margin-top: -2rem;
   justify-self: end;
-  z-index: 2;
+  z-index: 4;
 }
 .about-image-container :nth-child(3) {
   margin-top: -2rem;
-  z-index: 1;
+  z-index: 3;
+}
+.about-image-container :nth-child(4) {
+  margin-top: -2rem;
+  justify-self: end;
+  z-index: 2;
 }
 
 @media screen and (min-width: 40.0001rem) and (max-width:55rem) {
   .about-image-container {
     margin-top: -1rem;
-    grid-template-rows: min-content min-content auto;
+    grid-template-rows: min-content min-content min-content auto;
   }
   .about-image-container > img {
     max-height: 10rem;
     max-width: 100%;
   }
   .about-image-container :nth-child(2),
-  .about-image-container :nth-child(3) {
+  .about-image-container :nth-child(3),
+  .about-image-container :nth-child(4)
+  {
     margin-top: 0;
   }
 }
@@ -108,7 +123,8 @@
     max-width: 100%;
   }
   .about-image-container :nth-child(2),
-  .about-image-container :nth-child(3) {
+  .about-image-container :nth-child(3),
+  .about-image-container :nth-child(4) {
     margin-top: 0;
   }
 }

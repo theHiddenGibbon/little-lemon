@@ -1,7 +1,7 @@
 import './SpecialsCard.css';
 import PlusIcon from '../icons/circle-plus-solid.svg';
 
-const Carousel = (props) => {
+const SpecialsCard = (props) => {
   return(
     <li className="specials">
       <div className="img-container">
@@ -20,4 +20,4 @@ const Carousel = (props) => {
     </li>
   );
 };
-export default Carousel;
+export default SpecialsCard;

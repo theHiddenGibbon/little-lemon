@@ -9,6 +9,7 @@
     'hero-text hero-img'
     'hero-button hero-img';
   column-gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .hero-container > h1 {
@@ -23,6 +24,7 @@
 .hero-container > p {
   grid-area: hero-text;
   padding-bottom: 1rem;
+  margin: 1rem 0;
 }
 
 .hero-container > button {
