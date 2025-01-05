@@ -8,14 +8,13 @@ menu {
 menu a {
   text-transform: uppercase;
   text-decoration: none;
-  border-radius: 0.25rem;
-  padding: 0.25rem;
 }
 
 .nav-bar {
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
+  column-gap: 0.5rem;
 }
 
 .nav-bar > li {
@@ -27,11 +26,9 @@ menu a {
   font: 1em 'Karla', sans-serif;
   font-weight: 500;
   color: var(--primary1);
-  transition: all 0.25s ease;
 }
 .nav-bar a:hover,
 .nav-bar a:active {
-  background-color: var(--primary2);
   text-decoration: underline;
 }
 
@@ -39,7 +36,7 @@ menu a {
   .nav-bar {
     width: 100%;
     justify-content: center;
-    padding: 0.25em;
+    padding: 0.25rem;
   }
   .nav-bar > li {
     padding: 0 0.125rem;
@@ -55,7 +52,7 @@ menu a {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    background-color: white; 
+    background-color: white;
   }
   .nav-bar > li {
     padding: 0.5rem 0;

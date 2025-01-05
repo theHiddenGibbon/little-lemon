@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import './Testimonials.css';
+import Star from '../icons/star-solid.svg';
+import QuoteLeft from '../icons/quote-left-solid.svg';
+import QuoteRight from '../icons/quote-right-solid.svg';
 
 const testimonialData = [
   {
@@ -29,22 +32,57 @@ const testimonialData = [
 ];
 
 const Testimonials = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const cardRefs = useRef([]);
+
+  const handleCardClick = (index) => {
+    setActiveIndex(index);
+    if (cardRefs.current[index]) {
+      cardRefs.current[index].blur(); // Remove focus from the clicked element
+    }
+  };
+
+  const handleKeyDown = (event, index) => {
+    if (event.key === 'Enter') {
+      handleCardClick(index);
+    }
+  };
+
   return (
     <section className="testimonials full-width">
       <h3>Testimonials</h3>
       <ul className="testimonial-list">
         {testimonialData.map((testimonial, index) => (
           <React.Fragment key={index}>
-            <li className={`testimonial-card-inactive testimonial${index}`}>
+            <li
+              className={`${index === activeIndex 
+                ? 'testimonial-card-active' 
+                : 'testimonial-card-inactive'
+              } testimonial${index}`}
+              onClick={() => handleCardClick(index)}
+              onKeyDown={(event) => handleKeyDown(event, index)}
+              tabIndex={index === activeIndex ? -1 : 0}
+              ref={el => cardRefs.current[index] = el}
+            >
               <div className="user-card">
                 <img src={testimonial.image} alt="user avatar" />
                 <h5>{testimonial.name}</h5>
               </div>
             </li>
-            <li className={`review review${index}`}>
-              <h4>{testimonial.rating}*</h4>
-              {testimonial.review}
-            </li>
+            {index === activeIndex && (
+              <li className={`review review${index} active`}>
+                <div className="rating">
+                  {[...Array(testimonial.rating)].map((_, index) => (
+                    <img key={index} src={Star} alt="star" className="star" />
+                  ))}
+                </div>
+                <p className="quote">
+                  <img src={QuoteLeft} alt="open quotation mark" />
+                  {testimonial.review}
+                  <img src={QuoteRight} alt="close quotation mark" />
+                </p>
+              </li>
+            )}
           </React.Fragment>
         ))}
       </ul>

@@ -1,12 +1,61 @@
-const Login = (props) => {
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { users } from '../data/users';
+import './Login.css';
+
+const Login = ({ onLogin, isModal }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const user = users.find(u => u.email === email && u.password === password);
+    
+    if (user) {
+      setError('');
+      onLogin(user);
+      if (!isModal) {
+        navigate('/');
+      }
+    } else {
+      setError('Invalid email or password');
+    }
+  };
 
   return(
-    <section>
+    <section 
+      id={isModal ? "login-modal" : "login"} 
+      className={`login-section ${isModal ? 'modal' : ''}`}
+    >
       <h3>Login</h3>
-      <hr></hr>
-      <p>Lorem ipsum amet irure qui nostrud tempor cillum sint tempor officia sunt. Est aliquip voluptate adipisicing voluptate ipsum enim voluptate. Do non amet velit excepteur laboris ex tempor eiusmod sunt dolor voluptate qui incididunt. Est esse nulla eiusmod commodo nulla adipisicing eu qui exercitation. Excepteur est pariatur amet anim culpa consectetur eu.</p>
-      <hr></hr>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="email">Email</label>
+          <input 
+            type="email" 
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="password">Password</label>
+          <input 
+            type="password" 
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        {error && <p className="error-message">{error}</p>}
+        <button type="submit" className="action-button">Login</button>
+      </form>
     </section>
   );
 };
+
 export default Login;

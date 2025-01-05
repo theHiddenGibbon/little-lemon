@@ -1,5 +1,6 @@
 import './Carousel.css';
 import SpecialsCard from './SpecialsCard.js';
+import { forwardRef } from 'react';
 
 const specialsData = [
   {
@@ -34,9 +35,9 @@ const specialsData = [
   }
 ];
 
-const Carousel = () => {
+const Carousel = forwardRef((_, ref) => {
   return(
-    <ul className="carousel">
+    <ul className="carousel" ref={ref}>
       {specialsData.map((item, index) => (
         <SpecialsCard 
         key={index} 
@@ -48,5 +49,5 @@ const Carousel = () => {
       ))}
     </ul>
   );
-};
+});
 export default Carousel;

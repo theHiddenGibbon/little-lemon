@@ -11,7 +11,7 @@ import PinterestIcon from '../icons/square-pinterest-brands-solid.svg';
 import BlueSkyIcon from '../icons/square-bluesky-brands-solid.svg';
 import WhatsAppIcon from '../icons/square-whatsapp-brands-solid.svg';
 
-const Footer = () => {
+const Footer = ({ isLoggedIn }) => {
   return(
     <footer className="content-grid">
       <section className="full-width bg-green">
@@ -19,7 +19,7 @@ const Footer = () => {
           <img src={Logo} alt="Little Lemon logo" className="footer-logo" />
           <nav className="foot-nav">
             <h5 className="no-wrap">Site Navigation</h5>
-            <NavList class="footer-nav"/>
+            <NavList classname="footer-nav"/>
           </nav>
           <address>
             <div>
@@ -37,11 +37,11 @@ const Footer = () => {
                   <ul className="group-contact">
                     <li className="contact-detail">
                       <img src={PhoneIcon} alt="phone icon" />
-                      <p>0123 456 789 012</p>
+                      <p><a href="tel:+1123456789012" className="contact-link">(123) 456-7890 12</a></p>
                     </li>
                     <li className="contact-detail">
                       <img src={EmailIcon} alt="email icon" />
-                      <a href="/" className="email-link">
+                      <a href="mailto:not-real-email@little-lemon.not" className="contact-link">
                         <span className="no-wrap">not-real-email</span>
                         <span className="wrap">@</span>
                         <span className="no-wrap">little-lemon.not</span>
@@ -56,34 +56,34 @@ const Footer = () => {
               <div className="socials">
                 <ul className="social-list">
                   <li>
-                    <a href="https://www.instagram.com/" target="_blank" rel="noreferrer">
+                    <a href="https://www.instagram.com/not-real-little-lemon" target="_blank" rel="noreferrer">
                       <img src={InstagramIcon} alt="Instagram icon" />
                     </a>
                   </li>
                   <li>
-                    <a href="https://www.pinterest.com" target="_blank" rel="noreferrer">
+                    <a href="https://www.pinterest.com/not-real-little-lemon" target="_blank" rel="noreferrer">
                       <img src={PinterestIcon} alt="Pinterest icon" />
                     </a>
                   </li>
                   <li>
-                    <a href="https://www.facebook.com" target="_blank" rel="noreferrer">
+                    <a href="https://www.facebook.com/not-real-little-lemon" target="_blank" rel="noreferrer">
                       <img src={FacebookIcon} alt="Facebook icon" />
                     </a>
                   </li>
                 </ul>
                 <ul className="social-list">
                   <li>
-                    <a href="https://bsky.app/" target="_blank" rel="noreferrer">
+                    <a href="https://bsky.app/not-real-little-lemon" target="_blank" rel="noreferrer">
                       <img src={BlueSkyIcon} alt="BlueSky icon" />
                     </a>
                   </li>
                   <li>
-                    <a href="https://www.twitter.com" target="_blank" rel="noreferrer">
+                    <a href="https://www.twitter.com/not-real-little-lemon" target="_blank" rel="noreferrer">
                       <img src={TwitterIcon} alt="Twitter icon" />
                     </a>
                   </li>
                   <li>
-                    <a href="https://www.whatsapp.com" target="_blank" rel="noreferrer">
+                    <a href="https://www.whatsapp.com/not-real-little-lemon" target="_blank" rel="noreferrer">
                       <img src={WhatsAppIcon} alt="WhatsApp icon" />
                     </a>
                   </li>

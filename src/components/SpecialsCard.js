@@ -1,4 +1,5 @@
 import './SpecialsCard.css';
+import { Link } from 'react-router-dom';
 import PlusIcon from '../icons/circle-plus-solid.svg';
 
 const SpecialsCard = (props) => {
@@ -13,9 +14,9 @@ const SpecialsCard = (props) => {
 
       <div className="add-to-order">
         <span className="highlight">Add to order</span>
-        <button>  
+        <Link to="/order" aria-label={`Add ${props.title} to order`}>
           <img src={PlusIcon} alt="+" />
-        </button>
+        </Link>
       </div>
     </li>
   );

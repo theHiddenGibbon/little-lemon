@@ -9,6 +9,7 @@ footer h5 {
 footer a {
   color: white;
   text-decoration: none;
+  margin: 0;
 }
 
 footer a:hover {
@@ -32,7 +33,7 @@ footer a:hover span {
 }
 
 address {
-  font-style:normal;
+  font-style: normal;
   display: grid;
   gap: 2rem;
 }
@@ -70,7 +71,7 @@ address {
   margin: 0;
 }
 
-.email-link {
+.contact-link {
   display: inline-block;
   border-radius: 0.25rem;
   padding: 0.25rem;
@@ -101,7 +102,8 @@ address {
   display: inline-block;
   width: 2rem;
   height: 2rem;
-  border-radius: 0.25rem;
+  padding: 0;
+  margin: 0;
 }
 .social-list a:hover img {
   filter: 
