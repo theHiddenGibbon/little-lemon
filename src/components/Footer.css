@@ -118,7 +118,7 @@ address {
     transition: filter 0.25s ease;
 }
 
-@media screen and (min-width:35.0001rem) and (max-width: 55rem) {
+@media screen and (min-width:35.0001rem) and (max-width: 56rem) {
   .footer-grid {
     column-gap: 1.5rem;
   }

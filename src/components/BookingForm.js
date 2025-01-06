@@ -1,66 +1,65 @@
-import './BookingForm.css';
+import './Booking.css';
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import Login from './Login';
 import Calendar from  '../icons/calendar-regular.svg';
 import Clock from '../icons/clock-regular.svg';
 import Chair from '../icons/chair-solid.svg';
 import Cake from '../icons/cake-candles-solid.svg';
 import Note from '../icons/comment-dots-regular.svg';
-import { useLocation } from 'react-router-dom';
 import scrollToSection from '../utils/scrollToSection';
 
-
-const BookingForm = ({ availableTimes, updateTimes, user, onLogin }) => {
+const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm }) => {
   const today = new Date().toISOString().split('T')[0];
   const formRef = useRef(null);
-  const navigate = useNavigate();
   const location = useLocation();
 
-  const [guests, setGuests] = useState(1);
-  const [date, setDate] = useState(today);
-  const [time, setTime] = useState('');
-  const [occasion, setOccasion] = useState('None');
-  const [note, setNote] = useState('');
-  const [firstname, setFirstname] = useState(user ? user.firstname : '');
-  const [lastname, setLastname] = useState(user ? user.lastname : '');
-  const [email, setEmail] = useState(user ? user.email : '');
-  const [tel, setTel] = useState(user ? user.telephone : '');
-  const [step, setStep] = useState(2);
+  const [formData, setFormData] = useState({
+    guests: 1,
+    date: today,
+    time: '',
+    occasion: 'None',
+    note: '',
+    firstname: user ? user.firstname : '',
+    lastname: user ? user.lastname : '',
+    email: user ? user.email : '',
+    tel: user ? user.telephone : ''
+  });
 
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
+  const [step, setStep] = useState(1);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  const resetForm = () => {
-    setGuests(2);
-    setDate(today);
-    setTime('');
-    setOccasion('None');
-    setNote('');
-    setFirstname('');
-    setLastname('');
-    setEmail('');
-    setTel('');
-    setPassword('');
-    setConfirmPassword('');
+  const resetForm = (today) => {
+    setFormData({
+      guests: 1,
+      date: today,
+      time: '',
+      occasion: 'None',
+      note: '',
+      firstname: '',
+      lastname: '',
+      email: '',
+      tel: ''
+    });
     setShowLoginModal(false);
     setStep(1);
   };
 
   useEffect(() => {
     if (user) {
-      setFirstname(user.firstname);
-      setLastname(user.lastname);
-      setEmail(user.email);
-      setTel(user.telephone);
+      setFormData(prevData => ({
+        ...prevData,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        tel: user.telephone
+      }));
     }
   }, [user]);
 
   useEffect(() => {
     if (location.pathname === '/bookings' && !user) {
-      resetForm();
+      resetForm(today);
     }
   }, [location.key, user]);
 
@@ -81,10 +80,19 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin }) => {
     }
   }, [showLoginModal]);
 
-  const handleDateChange = (e) => {
-    const selectedDate = e.target.value;
-    setDate(selectedDate);
-    updateTimes(selectedDate);
+  useEffect(() => {
+    updateTimes(formData.date);
+  }, [formData.date, updateTimes]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevData => {
+      const newState = {
+        ...prevData,
+        [name]: value
+      };
+      return newState;
+    });
   };
 
   const handleScrollToTop = () => {
@@ -93,27 +101,39 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin }) => {
     });
   };
 
+  const validateFields = (fields) => {
+    let isValid = true;
+    for (const field of fields) {
+      if (field.hasAttribute('required') && !field.value) {
+        field.setCustomValidity('This field is required');
+        field.reportValidity();
+        field.classList.add('validation-required');
+        isValid = false;
+      } else {
+        field.setCustomValidity('');
+        field.classList.remove('validation-required');
+      }
+    }
+    return isValid;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({
-      date,
-      time,
-      guests,
-      occasion,
-      note,
-      firstname,
-      lastname,
-      email,
-      tel
-    });
-    setStep(3);
-    handleScrollToTop();
+    const allFields = formRef.current.querySelectorAll('input, select, textarea');
+    if (validateFields(allFields)) {
+      submitForm(formData);
+    } else {
+      console.log('Form is invalid'); // error handling to be added
+    }
   };
 
   const handleProceedClick = () => {
-    setStep(2);
-    handleScrollToTop();
-  }
+    const step1Fields = formRef.current.querySelectorAll('.step1 input, .step1 select, .step1 textarea');
+    if (validateFields(step1Fields)) {
+      setStep(2);
+      handleScrollToTop();
+    }
+  };
 
   const handleBackClick = (e) => {
     e.preventDefault();
@@ -121,33 +141,8 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin }) => {
     handleScrollToTop();
   };
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
-    if (password.length < 8) {
-      alert('Password must be at least 8 characters long');
-      return;
-    }
-    if (!/[A-Z]/.test(password)) {
-      alert('Password must contain at least one uppercase letter');
-      return;
-    }
-    if (!/[a-z]/.test(password)) {
-      alert('Password must contain at least one lowercase letter');
-      return;
-    }
-    if (!/[0-9]/.test(password)) {
-      alert('Password must contain at least one number');
-      return;
-    }
-    navigate('/login');
-  };
-
   return (
-    <article id="reservation-form" className="reservation-form">
+    <section id="reservation-form" className="reservation-form">
       {showLoginModal && (
         <>
           <div className="fullscreen-overlay" onClick={() => setShowLoginModal(false)}></div>
@@ -156,10 +151,13 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin }) => {
               isModal={true}
               onLogin={(loggedInUser) => {
                 setShowLoginModal(false);
-                setFirstname(loggedInUser.firstname);
-                setLastname(loggedInUser.lastname);
-                setEmail(loggedInUser.email);
-                setTel(loggedInUser.telephone);
+                setFormData(prevData => ({
+                  ...prevData,
+                  firstname: loggedInUser.firstname,
+                  lastname: loggedInUser.lastname,
+                  email: loggedInUser.email,
+                  tel: loggedInUser.telephone
+                }));
                 onLogin(loggedInUser);
               }} 
             />
@@ -172,7 +170,7 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin }) => {
         </>
       )}
       <form 
-        className="booking-form" 
+        className="booking" 
         onSubmit={handleSubmit} 
         ref={formRef}
       >
@@ -189,9 +187,10 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin }) => {
                 placeholder="2" 
                 min="1" max="10" 
                 id="guests" 
-                value={guests} 
-                onChange={e => setGuests(e.target.value)} 
-                required
+                name="guests" 
+                value={formData.guests} 
+                onChange={handleInputChange} 
+                required 
               />
             </div>
             <div className="input-group">
@@ -202,14 +201,15 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin }) => {
               <input 
                 type="date" 
                 id="res-date" 
-                value={date} 
-                onChange={handleDateChange} 
+                name="date" 
+                value={formData.date} 
+                onChange={handleInputChange} 
                 onClick={(e) => {
                   if (window.TouchEvent) {
                     e.target.click();
                   }
-                }}
-                required
+                }} 
+                required 
               />
             </div>
             <div className="input-group">
@@ -219,11 +219,12 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin }) => {
               </label>
               <select 
                 id="res-time" 
-                value={time} 
-                onChange={e => setTime(e.target.value)} 
+                name="time" 
+                value={formData.time} 
+                onChange={handleInputChange} 
                 required
               >
-                <option value="" hidden>select</option>
+                <option value="" disabled>select</option>
                 {availableTimes.map((availableTime, index) => (
                   <option key={index} value={availableTime}>{availableTime}</option>
                 ))}
@@ -236,8 +237,9 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin }) => {
               </label>
               <select 
                 id="occasion" 
-                value={occasion} 
-                onChange={e => setOccasion(e.target.value)}
+                name="occasion" 
+                value={formData.occasion} 
+                onChange={handleInputChange}
               >
                 <option>None</option>
                 <option>Birthday</option>
@@ -253,9 +255,10 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin }) => {
               <textarea 
                 type="text" 
                 id="res-note" 
-                value={note} 
-                rows="4"
-                onChange={e => setNote(e.target.value)} 
+                name="note" 
+                value={formData.note} 
+                rows="4" 
+                onChange={handleInputChange} 
                 placeholder="Add special requests or notes here. Please contact us directly beforehand for important requests."
               />
               <p>[Optional]</p>
@@ -277,9 +280,11 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin }) => {
               <input 
                 type="text" 
                 id="first-name" 
-                placeholder="first name"
-                value={firstname} 
-                onChange={e => setFirstname(e.target.value)} 
+                name="firstname" 
+                placeholder="first name" 
+                value={formData.firstname} 
+                onChange={handleInputChange} 
+                required 
               />
             </div>
             <div className="input-group">
@@ -287,9 +292,11 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin }) => {
               <input 
                 type="text" 
                 id="last-name" 
-                placeholder="last name"
-                value={lastname} 
-                onChange={e => setLastname(e.target.value)} 
+                name="lastname" 
+                placeholder="last name" 
+                value={formData.lastname} 
+                onChange={handleInputChange} 
+                required 
               />
             </div>
             <div className="input-group">
@@ -297,9 +304,11 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin }) => {
               <input 
                 type="email" 
                 id="email" 
-                placeholder="email address"
-                value={email} 
-                onChange={e => setEmail(e.target.value)} 
+                name="email" 
+                placeholder="email address" 
+                value={formData.email} 
+                onChange={handleInputChange} 
+                required 
               />
             </div>
             <div className="input-group">
@@ -307,101 +316,37 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin }) => {
               <input 
                 type="tel" 
                 id="tel" 
-                placeholder="telephone number"
-                value={tel} 
-                onChange={e => setTel(e.target.value)} 
+                name="tel" 
+                placeholder="telephone number" 
+                value={formData.tel} 
+                onChange={handleInputChange} 
+                required 
               />
             </div>
             <p className="space1">Data is stored confidentially and will only be used for matters relating to your bookings and orders.</p>
           </section>
         )}
 
-        {step < 3 && (
-          <div className={`progress progress-step${step}`}>
-            <div className="res-back">
-              {step === 2 && <a href="#reservation-form" onClick={handleBackClick}>◀ Back</a>}
-            </div>
-            <p className="reservation-step">Step {step} of 2</p>
-            {step === 1 
-              ? <button 
-                  type="button" 
-                  className="action-button res-proceed" 
-                  onClick={handleProceedClick}
-                >Proceed</button>
-              : <input 
-                  type="submit" 
-                  value="Confirm" 
-                  className="action-button res-confirm" 
-                />
-            }
+        <div className={`progress progress-step${step}`}>
+          <div className="res-back">
+            {step === 2 && <a href="#reservation-form" onClick={handleBackClick}>◀ Back</a>}
           </div>
-        )}
-
-        {step === 3 && (
-          <section className="res-confirmation">
-            <h4>Your reservation has been confirmed!</h4>
-            <div className="confirmation-details">
-              <p>Thank you {firstname}, we look forward to seeing you at Little Lemon on:</p>
-              <p>
-                <strong>
-                  {new Date(date).toLocaleDateString('en-GB', 
-                    { weekday: 'long' }).slice(0, 3) + ", " + new Date(date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/\s/g, '-')}
-                </strong> at <strong>{time}</strong>.
-              </p>
-              <p>Your table is reserved for <strong>{guests}</strong> {guests > 1 ? 'guests' : 'person'}.</p>
-            </div>
-            {!user && (<div className="register-account">
-              <h4>Register With Little Lemon</h4>
-              <p className="lead-text">Why not register your account with us to save time on future transactions and make it easier to view and manage your reservations and orders.</p>
-              <p>Just create a password below and click to create your account.</p>
-              <div className="set-password">
-                <div className="input-group">
-                  <label htmlFor="user-email">Email</label>
-                  <input 
-                    type="text" 
-                    id="user-email" 
-                    value={email} 
-                    disabled 
-                  />
-                </div>
-                <div className="input-group">
-                  <label htmlFor="password">Password</label>
-                  <input 
-                    type="password" 
-                    id="password" 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                    />
-                </div>
-                <div className="input-group">
-                  <label htmlFor="password-confirm">Confirm Password</label>
-                  <input 
-                    type="password" 
-                    id="password-confirm" 
-                    value={confirmPassword} 
-                    onChange={(e) => setConfirmPassword(e.target.value)} 
-                    />
-                </div>
-                <p>Password must contain at minimum each of the following:</p>
-                <ul>
-                  <li className="pw-requirement">8+ characters</li>
-                  <li className="pw-requirement">1+ upper case</li>
-                  <li className="pw-requirement">1+ lower case</li>
-                  <li className="pw-requirement">1+ number</li>
-                </ul>
-              </div>
-              <input 
+          <p className="reservation-step">Step {step} of 2</p>
+          {step === 1 
+            ? <button 
+                type="button" 
+                className="action-button res-proceed" 
+                onClick={handleProceedClick}
+              >Proceed</button>
+            : <input 
                 type="submit" 
-                value="Create Account"
-                className="action-button create-account" 
-                onClick={handleRegister} 
+                value="Confirm" 
+                className="action-button res-confirm" 
               />
-            </div>)}
-            <Link to="/" className="return-home">{!user ? 'No thanks, r' : 'R'}eturn to Home</Link>
-          </section>
-        )}
+          }
+        </div>
       </form>
-    </article>
+    </section>
   );
 };
 

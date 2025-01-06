@@ -171,7 +171,7 @@ section,
 article {
   padding: 4rem 0;
 }
-@media screen and (min-width: 55rem) {
+@media screen and (min-width: 56rem) {
   section {
     padding: 6rem 0;
   }

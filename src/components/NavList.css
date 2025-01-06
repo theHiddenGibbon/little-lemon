@@ -32,7 +32,7 @@ menu a {
   text-decoration: underline;
 }
 
-@media screen and (min-width:35.0001rem) and (max-width:55rem) {
+@media screen and (min-width:35.0001rem) and (max-width:56rem) {
   .nav-bar {
     width: 100%;
     justify-content: center;

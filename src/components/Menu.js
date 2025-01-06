@@ -1,4 +1,4 @@
-const Menu = (props) => {
+const Menu = () => {
 
   return(
     <article id="menu" className="menu">
