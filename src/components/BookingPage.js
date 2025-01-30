@@ -15,15 +15,15 @@ const timesReducer = (state, action) => {
   }
 };
 
-const getBookingsFromStorage = () => {
-  return JSON.parse(localStorage.getItem('bookingData')) || [];
-};
+// const getBookingsFromStorage = () => {
+//   return JSON.parse(localStorage.getItem('bookingData')) || [];
+// };
 
 const BookingPage = ({ user, onLogin }) => {
 
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [formData, setFormData] = useState(null);
-  const [bookings, setBookings] = useState([]);
+  // const [bookings, setBookings] = useState([]);
   const [showBookings, setShowBookings] = useState(false); // for testing purposes
 
   const [availableTimes, dispatch] = useReducer(timesReducer, []);
@@ -33,9 +33,9 @@ const BookingPage = ({ user, onLogin }) => {
     setFormData(data);
     setIsConfirmed(true);
     const existingBookings = JSON.parse(localStorage.getItem('bookingData')) || [];
-    const updatedBookings = [...existingBookings, { user, ...data }];
+    const updatedBookings = [...existingBookings, { ...data }];
     localStorage.setItem('bookingData', JSON.stringify(updatedBookings));
-    setBookings(updatedBookings);
+    // setBookings(updatedBookings);
   };
 
   const resetConfirm = () => {
@@ -72,10 +72,10 @@ const BookingPage = ({ user, onLogin }) => {
     }
   };
 
-  useEffect(() => {
-    const storedBookings = getBookingsFromStorage();
-    setBookings(storedBookings);
-  }, []);
+  // useEffect(() => {
+  //   const storedBookings = getBookingsFromStorage();
+  //   setBookings(storedBookings);
+  // }, []);
 
   const toggleBookings = () => {
     setShowBookings(!showBookings);
@@ -105,7 +105,7 @@ const BookingPage = ({ user, onLogin }) => {
           )
       )}
       </section>
-      <button onClick={toggleBookings}>
+      {/* <button onClick={toggleBookings}>
         {showBookings ? 'Hide Bookings' : 'View Bookings'}
       </button>
       <p>This booking data viewer is for testing purposes only.</p>
@@ -113,7 +113,7 @@ const BookingPage = ({ user, onLogin }) => {
         <aside className="booking">
           <BookingDataViewer />}
         </aside>
-    )}
+      )} */}
     </article>
   );
 };

@@ -20,6 +20,11 @@ button:hover,
     0 0 2px 2px var(--primary2),
     0 0 2px 2px var(--primary2) inset;
 }
+button:disabled:hover,
+.action-button:disabled:hover {
+  border: 1px solid var(--secondary1);
+  box-shadow: none;
+}
 
 *::placeholder {
   color: var(--secondary4);
@@ -151,6 +156,11 @@ a:active {
   border: none;
   background-color: var(--primary2);
   text-transform: uppercase;
+}
+.action-button:disabled {
+  background-color: var(--secondary2);
+  cursor: default;
+  opacity: 0.5;
 }
 
 .no-wrap {

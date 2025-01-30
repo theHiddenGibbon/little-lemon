@@ -6,32 +6,82 @@ const BookingConfirmed = ({ user, formData }) => {
 
   const navigate = useNavigate();
 
+  const [isValid, setIsValid] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  const [requirements, setRequirements] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false
+  });
+
+  const validatePasswordRequirements = (pwField) => {
+    pwField.setCustomValidity('');
+    pwField.classList.remove('validation-required');
+    if (!Object.values(requirements).every(Boolean)) {
+      pwField.setCustomValidity('Password requirements not met');
+      pwField.classList.add('validation-required');
+      return false;
+    }
+    return true;
+  };
+
+  const validatePasswordMatch = (pwConfirmField) => {
+    pwConfirmField.setCustomValidity('');
+    pwConfirmField.classList.remove('validation-required');
+    if (password !== confirmPassword) {
+      pwConfirmField.setCustomValidity('Passwords do not match');
+      pwConfirmField.classList.add('validation-required');
+      return false;
+    }
+    return true;
+  };
+
+  const handleBlur = (e) => {
+    const field = e.target;
+    if (field.name === 'password') {
+      if (!validatePasswordRequirements(field)) {
+        field.reportValidity();
+      }
+    }
+    if (field.name === 'pwconfirm') {
+      if (!validatePasswordMatch(field)) {
+        field.reportValidity();
+      }
+    }
+  };
+
   const handleRegister = (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      alert('Passwords do not match');
+    // Check match first
+    if (!validatePasswordMatch(e.target.pwconfirm)) {
+      e.target.pwconfirm.reportValidity();
       return;
     }
-    if (password.length < 8) {
-      alert('Password must be at least 8 characters long');
-      return;
-    }
-    if (!/[A-Z]/.test(password)) {
-      alert('Password must contain at least one uppercase letter');
-      return;
-    }
-    if (!/[a-z]/.test(password)) {
-      alert('Password must contain at least one lowercase letter');
-      return;
-    }
-    if (!/[0-9]/.test(password)) {
-      alert('Password must contain at least one number');
+    // Then check requirements
+    if (!validatePasswordRequirements(e.target.password)) {
+      e.target.password.reportValidity();
       return;
     }
     navigate('/login');
+  };
+
+  const checkValidation = (currentPassword, currentConfirmPassword) => {
+    return Object.values(requirements).every(Boolean) && 
+           currentPassword === currentConfirmPassword;
+  };
+
+  const checkRequirements = (password) => {
+    const check = {
+      length: password.length >= 8 && password.length <= 16,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /[0-9]/.test(password)
+    };
+    setRequirements(check);
+    setIsValid(checkValidation(password, confirmPassword));
   };
 
   return(
@@ -55,11 +105,14 @@ const BookingConfirmed = ({ user, formData }) => {
           </p>
         </div>
       </section>
-      <section>
-        {!user && (<div className="register-account">
-          <h4>Register With Little Lemon</h4>
-          <p className="lead-text">Why not register your account with us to save time on future transactions and make it easier to view and manage your reservations and orders.</p>
-          <p>Just create a password below and click to create your account.</p>
+      {!user && (<section className="register-account">
+        <h4>Register With Little Lemon</h4>
+        <p className="lead-text">Why not register your account with us to save time on future transactions and make it easier to view and manage your reservations and orders.</p>
+        <p>Just create a password below and click to create your account.</p>
+        <form 
+          onSubmit={handleRegister} 
+          noValidate
+        >
           <div className="set-password">
             <div className="input-group">
               <label htmlFor="user-email">Email</label>
@@ -68,42 +121,62 @@ const BookingConfirmed = ({ user, formData }) => {
                 id="user-email" 
                 value={formData.email} 
                 disabled 
-                />
+              />
             </div>
             <div className="input-group">
               <label htmlFor="password">Password</label>
               <input 
                 type="password" 
                 id="password" 
+                name="password" 
                 value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
-                />
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  checkRequirements(e.target.value);
+                }} 
+                onBlur={handleBlur} 
+                required
+              />
             </div>
             <div className="input-group">
-              <label htmlFor="password-confirm">Confirm Password</label>
+              <label htmlFor="pwconfirm">Confirm Password</label>
               <input 
                 type="password" 
-                id="password-confirm" 
+                id="pwconfirm" 
+                name="pwconfirm" 
                 value={confirmPassword} 
-                onChange={(e) => setConfirmPassword(e.target.value)} 
-                />
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  setIsValid(checkValidation(password, e.target.value));
+                }} 
+                onBlur={handleBlur} 
+                required
+              />
             </div>
-            <p>Password must contain at minimum each of the following:</p>
+            <p>Passwords must contain:</p>
             <ul>
-              <li className="pw-requirement">8+ characters</li>
-              <li className="pw-requirement">1+ upper case</li>
-              <li className="pw-requirement">1+ lower case</li>
-              <li className="pw-requirement">1+ number</li>
+              <li className={`pw-requirement ${requirements.length ? 'met' : 'unmet'}`}>
+                8-16 characters
+              </li>
+              <li className={`pw-requirement ${requirements.uppercase ? 'met' : 'unmet'}`}>
+                1+ uppercase character
+              </li>
+              <li className={`pw-requirement ${requirements.lowercase ? 'met' : 'unmet'}`}>
+                1+ lowercase character
+              </li>
+              <li className={`pw-requirement ${requirements.number ? 'met' : 'unmet'}`}>
+                1+ numerical digit
+              </li>
             </ul>
           </div>
           <input 
             type="submit" 
             value="Create Account"
             className="action-button create-account" 
-            onClick={handleRegister} 
-            />
-        </div>)}
-      </section>
+            disabled={!isValid} 
+          />
+        </form>
+      </section>)}
       <Link to="/" className="return-home">{!user ? 'No thanks, r' : 'R'}eturn to Home</Link>
     </section>
   );

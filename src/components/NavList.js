@@ -4,19 +4,19 @@ import { Link, useLocation } from 'react-router-dom';
 import scrollToSection from '../utils/scrollToSection';
 import scrollToTop from '../utils/scrollToTop';
 
+const sectionMap = {
+  '/': 'home',
+  '/about': 'about-full',
+  '/menu': 'menu',
+  '/bookings': 'bookings',
+  '/order': 'order',
+  '/login': 'login',
+  '/account': 'account'
+};
+
 const NavList = ({ classname, isLoggedIn, onLinkClick }) => {
 
   const location = useLocation();
-
-  const sectionMap = {
-    '/': 'home',
-    '/about': 'about-full',
-    '/menu': 'menu',
-    '/bookings': 'bookings',
-    '/order': 'order',
-    '/login': 'login',
-    '/account': 'account'
-  };
 
   useEffect(() => {
     const sectionId = sectionMap[location.pathname];

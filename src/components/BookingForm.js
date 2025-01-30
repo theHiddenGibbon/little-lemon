@@ -1,6 +1,6 @@
 import './Booking.css';
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Login from './Login';
 import Calendar from  '../icons/calendar-regular.svg';
 import Clock from '../icons/clock-regular.svg';
@@ -8,39 +8,46 @@ import Chair from '../icons/chair-solid.svg';
 import Cake from '../icons/cake-candles-solid.svg';
 import Note from '../icons/comment-dots-regular.svg';
 import scrollToSection from '../utils/scrollToSection';
+import { validationConfig } from '../utils/validationConfig';
+
+const getInitialFormData = (today, user) => ({
+  guests: 1,
+  date: today,
+  time: '',
+  occasion: 'None',
+  note: '',
+  firstname: user ? user.firstname : '',
+  lastname: user ? user.lastname : '',
+  email: user ? user.email : '',
+  tel: user ? user.telephone : ''
+});
+
+const getInitialFieldValidity = (user) => ({
+  guests: true,
+  date: true,
+  time: false,
+  occasion: true,
+  note: true,
+  firstname: user && user.firstname ? true : false,
+  lastname: user && user.lastname ? true : false,
+  email: user && user.email ? true : false,
+  tel: user && user.telephone ? true : false
+});
 
 const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm }) => {
   const today = new Date().toISOString().split('T')[0];
   const formRef = useRef(null);
   const location = useLocation();
 
-  const [formData, setFormData] = useState({
-    guests: 1,
-    date: today,
-    time: '',
-    occasion: 'None',
-    note: '',
-    firstname: user ? user.firstname : '',
-    lastname: user ? user.lastname : '',
-    email: user ? user.email : '',
-    tel: user ? user.telephone : ''
-  });
-
+  const [formData, setFormData] = useState(getInitialFormData(today, user));
+  const [fieldValidity, setFieldValidity] = useState(getInitialFieldValidity(user));
+  const [batchValidating, setBatchValidating] = useState(false);
   const [step, setStep] = useState(1);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   const resetForm = (today) => {
-    setFormData({
-      guests: 1,
-      date: today,
-      time: '',
-      occasion: 'None',
-      note: '',
-      firstname: '',
-      lastname: '',
-      email: '',
-      tel: ''
-    });
+    setFormData(getInitialFormData(today, user));
+    setFieldValidity(getInitialFieldValidity(user));
     setShowLoginModal(false);
     setStep(1);
   };
@@ -61,13 +68,13 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
     if (location.pathname === '/bookings' && !user) {
       resetForm(today);
     }
-  }, [location.key, user]);
+  },  [location.pathname, location.key, user, today]);
 
   useEffect(() => {
     if (location.pathname === '/bookings') {
       setStep(1);
     }
-  }, [location.pathname]);
+  }, [location.pathname, location.key]);
 
   useEffect(() => {
     if (showLoginModal && formRef.current) {
@@ -84,58 +91,132 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
     updateTimes(formData.date);
   }, [formData.date, updateTimes]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevData => {
-      const newState = {
-        ...prevData,
-        [name]: value
-      };
-      return newState;
-    });
-  };
-
   const handleScrollToTop = () => {
-    requestAnimationFrame(() => {
-      scrollToSection("reservation-form");
-    });
+    scrollToSection(formRef.current);
   };
 
-  const validateFields = (fields) => {
+  const validateField = (field, batchValidating) => {
+    const config = validationConfig[field.name];
+    if (!config) return true;
     let isValid = true;
-    for (const field of fields) {
-      if (field.hasAttribute('required') && !field.value) {
-        field.setCustomValidity('This field is required');
-        field.reportValidity();
-        field.classList.add('validation-required');
-        isValid = false;
+    let message = '';
+
+    if (field.type === 'number' && (field.validity.badInput || isNaN(Number(field.value)))) {
+      isValid = false;
+      message = config.message;
+    }
+    else if (!field.value && config.required) {
+      isValid = false;
+      message = config.emptyMessage;
+    }
+    else if (field.value && config.pattern && !config.pattern.test(field.value)) {
+      isValid = false;
+      message = config.message;
+    }
+    else if (field.value && (config.min !== undefined || config.max !== undefined)) {
+      if (field.type === 'date') {
+        const value = new Date(field.value);
+        const minDate = config.min ? new Date(config.min) : null;
+        const maxDate = config.max ? new Date(config.max) : null;
+        if ((minDate && value < minDate) || (maxDate && value > maxDate)) {
+          isValid = false;
+          message = config.message;
+        }
       } else {
-        field.setCustomValidity('');
-        field.classList.remove('validation-required');
+        const value = field.type === 'number' ? Number(field.value) : field.value.length;
+        if ((config.min !== undefined && value < config.min) || 
+            (config.max !== undefined && value > config.max)) {
+          isValid = false;
+          message = config.message;
+        }
+      }
+    }
+    return { isValid, message };
+  };
+
+  const validateStep = (form) => {
+    if (!form) return false;
+    const stepFields = Array.from(form.querySelectorAll(`.step${step} input, .step${step} select, .step${step} textarea`))
+      .filter(field => field.type !== 'submit' && field.type !== 'button');
+    let isValid = true;
+    stepFields.forEach(field => {
+      isValid = validateField(field, true) && isValid;
+    });
+    if (!isValid) {
+      const firstInvalid = stepFields.find(field => 
+        field.classList.contains('validation-required'));
+      if (firstInvalid) {
+        firstInvalid.focus();
+        firstInvalid.reportValidity();
       }
     }
     return isValid;
   };
 
+  const isStepValid = (step) => {
+    if (step === 1) {
+      return fieldValidity.guests && 
+             fieldValidity.date && 
+             fieldValidity.time && 
+             fieldValidity.occasion &&
+             fieldValidity.note;
+    } 
+    return fieldValidity.firstname && 
+           fieldValidity.lastname && 
+           fieldValidity.email && 
+           fieldValidity.tel;
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    const validation = validateField(e.target, false);
+    setFieldValidity(prev => ({
+      ...prev,
+      [name]: validation.isValid
+    }));
+    e.target.setCustomValidity(validation.message);
+  };
+
+  const displayValidity = (field) => {
+    const isValid = fieldValidity[field.name];
+    if (!isValid) {
+      field.classList.add('validation-required');
+      field.reportValidity();
+    } else {
+      field.setCustomValidity('');
+      field.classList.remove('validation-required');
+    }
+  };
+
+  const handleBlur = (e) => {
+    if (!batchValidating) {
+      displayValidity(e.target);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const allFields = formRef.current.querySelectorAll('input, select, textarea');
-    if (validateFields(allFields)) {
+    setBatchValidating(true);
+    if (validateStep(formRef.current)) {
       submitForm(formData);
-    } else {
-      console.log('Form is invalid'); // error handling to be added
     }
+    setBatchValidating(false);
   };
 
-  const handleProceedClick = () => {
-    const step1Fields = formRef.current.querySelectorAll('.step1 input, .step1 select, .step1 textarea');
-    if (validateFields(step1Fields)) {
+  const handleProceed = () => {
+    setBatchValidating(true);
+    if (validateStep(formRef.current)) {
       setStep(2);
-      handleScrollToTop();
+      scrollToSection(formRef.current);
     }
+    setBatchValidating(false);
   };
 
-  const handleBackClick = (e) => {
+  const handleBack = (e) => {
     e.preventDefault();
     setStep(1);
     handleScrollToTop();
@@ -172,12 +253,13 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
       <form 
         className="booking" 
         onSubmit={handleSubmit} 
+        noValidate 
         ref={formRef}
       >
         {step === 1 && (
           <section className="step1">
             <h4>Reservation Details</h4>
-            <div className="input-group">
+            <fieldset className="input-group">
               <label htmlFor="guests">
                 <img src={Chair} alt="seat icon" />
                 <span>Number of guests</span>
@@ -186,14 +268,18 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
                 type="number" 
                 placeholder="2" 
                 min="1" max="10" 
+                maxLength="2" 
                 id="guests" 
                 name="guests" 
                 value={formData.guests} 
                 onChange={handleInputChange} 
+                onBlur={handleBlur} 
+                pattern="^([1-9]|10)$" 
+                title="Select a number, max 10"
                 required 
               />
-            </div>
-            <div className="input-group">
+            </fieldset>
+            <fieldset className="input-group">
               <label htmlFor="res-date">
                 <img src={Calendar} alt="" role="presentation" />
                 <span>Date</span>
@@ -204,15 +290,17 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
                 name="date" 
                 value={formData.date} 
                 onChange={handleInputChange} 
+                onBlur={handleBlur} 
                 onClick={(e) => {
                   if (window.TouchEvent) {
                     e.target.click();
                   }
                 }} 
+                title="Select a date" 
                 required 
               />
-            </div>
-            <div className="input-group">
+            </fieldset>
+            <fieldset className="input-group">
               <label htmlFor="res-time">
                 <img src={Clock} alt="" role="presentation" />
                 <span>Time</span>
@@ -222,6 +310,8 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
                 name="time" 
                 value={formData.time} 
                 onChange={handleInputChange} 
+                onBlur={handleBlur} 
+                title="Select an available time" 
                 required
               >
                 <option value="" disabled>select</option>
@@ -229,8 +319,8 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
                   <option key={index} value={availableTime}>{availableTime}</option>
                 ))}
               </select>
-            </div>
-            <div className="input-group">
+            </fieldset>
+            <fieldset className="input-group">
               <label htmlFor="occasion">
                 <img src={Cake} alt="" role="presentation" />
                 <span>Occasion</span>
@@ -239,6 +329,7 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
                 id="occasion" 
                 name="occasion" 
                 value={formData.occasion} 
+                onBlur={handleBlur} 
                 onChange={handleInputChange}
               >
                 <option>None</option>
@@ -246,8 +337,8 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
                 <option>Anniversary</option>
                 <option>Other (add note)</option>
               </select>
-            </div>
-            <div className="input-group">
+            </fieldset>
+            <fieldset className="input-group">
               <label htmlFor="res-note">
                 <img src={Note} alt="" role="presentation" />
                 <span>Notes & Requests</span>
@@ -258,11 +349,13 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
                 name="note" 
                 value={formData.note} 
                 rows="4" 
+                maxLength="180" 
                 onChange={handleInputChange} 
+                onBlur={handleBlur} 
                 placeholder="Add special requests or notes here. Please contact us directly beforehand for important requests."
               />
               <p>[Optional]</p>
-            </div>
+            </fieldset>
           </section>
         )}
 
@@ -275,73 +368,87 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
                   onClick={(e) => {e.preventDefault(); setShowLoginModal(true);}}
                 >login</a> to save time.</p>
             }
-            <div className="input-group">
+            <fieldset className="input-group">
               <label htmlFor="first-name">First name</label>
               <input 
                 type="text" 
                 id="first-name" 
                 name="firstname" 
+                aria-label="first name" 
                 placeholder="first name" 
                 value={formData.firstname} 
                 onChange={handleInputChange} 
+                onBlur={handleBlur} 
+                minLength="2" maxLength="40" 
+                pattern="[A-Za-z'\- ]+" 
                 required 
               />
-            </div>
-            <div className="input-group">
               <label htmlFor="last-name">Last name</label>
               <input 
                 type="text" 
                 id="last-name" 
                 name="lastname" 
+                aria-label="last name" 
                 placeholder="last name" 
                 value={formData.lastname} 
                 onChange={handleInputChange} 
+                onBlur={handleBlur} 
+                minLength="2" maxLength="40" 
+                pattern="[A-Za-z'\- ]+" 
                 required 
               />
-            </div>
-            <div className="input-group">
+            </fieldset>
+            <fieldset className="input-group">
               <label htmlFor="email">Email</label>
               <input 
                 type="email" 
                 id="email" 
                 name="email" 
+                aria-label="email address" 
                 placeholder="email address" 
                 value={formData.email} 
                 onChange={handleInputChange} 
+                onBlur={handleBlur} 
+                minLength="5" maxLength="254" 
                 required 
               />
-            </div>
-            <div className="input-group">
+            </fieldset>
+            <fieldset className="input-group">
               <label htmlFor="tel">Telephone</label>
               <input 
                 type="tel" 
                 id="tel" 
                 name="tel" 
+                aria-label="telephone number" 
                 placeholder="telephone number" 
                 value={formData.tel} 
                 onChange={handleInputChange} 
+                onBlur={handleBlur} 
+                minLength="9" maxLength="18"
                 required 
               />
-            </div>
+            </fieldset>
             <p className="space1">Data is stored confidentially and will only be used for matters relating to your bookings and orders.</p>
           </section>
         )}
 
         <div className={`progress progress-step${step}`}>
           <div className="res-back">
-            {step === 2 && <a href="#reservation-form" onClick={handleBackClick}>◀ Back</a>}
+            {step === 2 && <a href="#reservation-form" onClick={handleBack}>◀ Back</a>}
           </div>
           <p className="reservation-step">Step {step} of 2</p>
           {step === 1 
             ? <button 
                 type="button" 
                 className="action-button res-proceed" 
-                onClick={handleProceedClick}
+                onClick={handleProceed} 
+                disabled={!isStepValid(1)}
               >Proceed</button>
             : <input 
                 type="submit" 
                 value="Confirm" 
                 className="action-button res-confirm" 
+                disabled={!isStepValid(2)} 
               />
           }
         </div>
