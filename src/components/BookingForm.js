@@ -54,13 +54,10 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
 
   useEffect(() => {
     if (user) {
-      setFormData(prevData => ({
-        ...prevData,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        email: user.email,
-        tel: user.telephone
-      }));
+      const updatedFormData = getInitialFormData(today, user);
+      setFormData(updatedFormData);
+      const updatedFieldValidity = getInitialFieldValidity(user);
+      setFieldValidity(updatedFieldValidity);
     }
   }, [user]);
 
@@ -86,10 +83,6 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
       }
     }
   }, [showLoginModal]);
-
-  useEffect(() => {
-    updateTimes(formData.date);
-  }, [formData.date, updateTimes]);
 
   const handleScrollToTop = () => {
     scrollToSection(formRef.current);
@@ -169,30 +162,45 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
+    setFormData({
+      ...formData,
       [name]: value
-    }));
-    const validation = validateField(e.target, false);
-    setFieldValidity(prev => ({
-      ...prev,
-      [name]: validation.isValid
-    }));
-    e.target.setCustomValidity(validation.message);
+    });
+    setFieldValidity({
+      ...fieldValidity,
+      [name]: e.target.validity.valid
+    });
   };
 
+  useEffect(() => {
+    if (!availableTimes.includes(formData.time)) {
+      setFormData(prev => ({
+        ...prev,
+        time: ''
+      }));
+      setFieldValidity(prev => ({
+        ...prev,
+        time: false
+      }));
+    }
+  }, [availableTimes]);
+
   const displayValidity = (field) => {
-    const isValid = fieldValidity[field.name];
+    const isValid = field.validity.valid;  // Ensure we use built-in validation
+    console.log(`displayValidity called for: ${field.name}, isValid: ${isValid}, validity state:`, field.validity);
+  
     if (!isValid) {
       field.classList.add('validation-required');
-      field.reportValidity();
+      console.log(`${field.name} -> Adding validation-required class`);
     } else {
-      field.setCustomValidity('');
       field.classList.remove('validation-required');
+      console.log(`${field.name} -> Removing validation-required class`);
     }
   };
 
   const handleBlur = (e) => {
+    console.log('handleBlur called for:', e.target.name); // Log which field is blurred
+
     if (!batchValidating) {
       displayValidity(e.target);
     }

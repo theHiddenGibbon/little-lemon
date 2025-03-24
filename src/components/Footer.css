@@ -98,6 +98,7 @@ address {
   width: 2rem;
   height: 2rem;
 }
+
 .social-list a {
   display: inline-block;
   width: 2rem;
@@ -105,6 +106,7 @@ address {
   padding: 0;
   margin: 0;
 }
+
 .social-list a:hover img {
   filter: 
     brightness(0) 

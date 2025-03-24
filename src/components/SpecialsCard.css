@@ -48,28 +48,38 @@
 }
 
 .add-to-order img {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: calc(1.5rem - 4px);
+  height: calc(1.5rem - 4px);
+  border-radius: 50%;
+  transition: all 0.5s ease;
 }
 
-.add-to-order > a {
-  border-radius: 50%;
-  border:1px solid transparent;
-  padding: 1px;
-  display: grid;
+.add-to-order a {
+  display: flex;
   align-items: center;
   justify-content: center;
-  place-items: center;
-  background-color: white;
-  filter: none;
-  transition: filter 0.25s ease;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  padding: 0;
+  margin: 0;
+  background-color: var(--primary1);
+  border-radius: 50%;
+  transition: all 0.5s ease;
 }
 
-.add-to-order > a:hover {
-  border-radius: 50%;
+.add-to-order a:hover {
   background-color: var(--primary2);
-  border: 1px solid var(--primary1);
-  box-shadow: 
-  0 0 2px 2px var(--primary2),
-  0 0 2px 2px var(--primary2) inset;
+}
+
+.add-to-order a:hover img {
+  filter: 
+    brightness(0) 
+    saturate(100%) 
+    invert(34%) 
+    sepia(12%) 
+    saturate(500%) 
+    hue-rotate(90deg) 
+    brightness(90%) 
+    contrast(90%);
 }
