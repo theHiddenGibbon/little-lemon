@@ -244,6 +244,11 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
+.login-form-overlay .link-button {
+  margin: 0 2rem;
+  padding: 0.25rem;
+}
+
 .fullscreen-overlay {
   position: fixed;
   top: 0;

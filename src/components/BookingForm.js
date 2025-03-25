@@ -1,5 +1,5 @@
 import './Booking.css';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import Login from './Login';
 import Calendar from  '../icons/calendar-regular.svg';
@@ -45,12 +45,12 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
   const [step, setStep] = useState(1);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  const resetForm = (today) => {
+  const resetForm = useCallback((today) => {
     setFormData(getInitialFormData(today, user));
     setFieldValidity(getInitialFieldValidity(user));
     setShowLoginModal(false);
     setStep(1);
-  };
+  }, [user]);
 
   useEffect(() => {
     if (user) {
@@ -59,13 +59,13 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
       const updatedFieldValidity = getInitialFieldValidity(user);
       setFieldValidity(updatedFieldValidity);
     }
-  }, [user]);
+  }, [user, today]);
 
   useEffect(() => {
     if (location.pathname === '/bookings' && !user) {
       resetForm(today);
     }
-  },  [location.pathname, location.key, user, today]);
+  }, [location.pathname, location.key, user, today, resetForm]);
 
   useEffect(() => {
     if (location.pathname === '/bookings') {
@@ -183,24 +183,18 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
         time: false
       }));
     }
-  }, [availableTimes]);
+  }, [availableTimes, formData.time]);
 
   const displayValidity = (field) => {
-    const isValid = field.validity.valid;  // Ensure we use built-in validation
-    console.log(`displayValidity called for: ${field.name}, isValid: ${isValid}, validity state:`, field.validity);
-  
+    const isValid = field.validity.valid;
     if (!isValid) {
       field.classList.add('validation-required');
-      console.log(`${field.name} -> Adding validation-required class`);
     } else {
       field.classList.remove('validation-required');
-      console.log(`${field.name} -> Removing validation-required class`);
     }
   };
 
   const handleBlur = (e) => {
-    console.log('handleBlur called for:', e.target.name); // Log which field is blurred
-
     if (!batchValidating) {
       displayValidity(e.target);
     }
@@ -250,11 +244,16 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
                 onLogin(loggedInUser);
               }} 
             />
-            <a 
-              href="#" 
-              className="cancel-link" 
-              onClick={(e) => { e.preventDefault(); setShowLoginModal(false); }}
-              >Cancel</a>
+            <button
+              type="button" 
+              className="link-button" 
+              onClick={(e) => { 
+                e.preventDefault(); 
+                setShowLoginModal(false); 
+              }}
+            >
+              ◀ Cancel
+            </button>
           </div>
         </>
       )}
@@ -371,10 +370,15 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
           <section className="step2">
             <h4>Customer Details</h4>
             {!user && 
-              <p>If you are already registered with Little Lemon, you can <a 
-                  href="#" 
-                  onClick={(e) => {e.preventDefault(); setShowLoginModal(true);}}
-                >login</a> to save time.</p>
+              <p>If you are already registered with Little Lemon, you can 
+                <button
+                  type="button" 
+                  className="link-button" 
+                  onClick={() => setShowLoginModal(true)}
+                >
+                  login
+                </button>
+                to save time.</p>
             }
             <fieldset className="input-group">
               <label htmlFor="first-name">First name</label>
