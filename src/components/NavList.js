@@ -32,6 +32,7 @@ const NavList = ({ classname, isLoggedIn, hideMenu, mainRef, showHeader }) => {
       });
     }, 400);
     setTimeout(() => {
+      mainRef.current.focus();
       showHeader(false);
     }, 500);
   };

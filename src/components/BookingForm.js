@@ -90,7 +90,7 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
 
   const validateField = (field, batchValidating) => {
     const config = validationConfig[field.name];
-    if (!config) return true;
+    if (!config) return { isValid: true, message: '' };
     let isValid = true;
     let message = '';
 
@@ -123,6 +123,13 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
           message = config.message;
         }
       }
+    }
+    if (!isValid) {
+      field.classList.add('validation-required');
+      field.setCustomValidity(message);
+    } else {
+      field.classList.remove('validation-required');
+      field.setCustomValidity('');
     }
     return { isValid, message };
   };
@@ -157,7 +164,7 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
     return fieldValidity.firstname && 
            fieldValidity.lastname && 
            fieldValidity.email && 
-           fieldValidity.tel;
+           (formData.tel === '' || fieldValidity.tel);
   };
 
   const handleInputChange = (e) => {
@@ -192,6 +199,7 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
     } else {
       field.classList.remove('validation-required');
     }
+    field.reportValidity(); // Ensure the browser's default validation message is shown
   };
 
   const handleBlur = (e) => {
@@ -350,6 +358,7 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
                 <img src={Note} alt="" role="presentation" />
                 <span>Notes & Requests</span>
               </label>
+              <p id="note-helper">[Optional]</p>
               <textarea 
                 type="text" 
                 id="res-note" 
@@ -362,7 +371,6 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
                 onBlur={handleBlur} 
                 placeholder="Add special requests or notes here. Please contact us directly beforehand for important requests."
               />
-              <p id="note-helper">[Optional]</p>
             </fieldset>
           </section>
         )}
@@ -433,12 +441,11 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
                 id="tel" 
                 name="tel" 
                 aria-label="telephone number" 
-                placeholder="telephone number" 
+                placeholder="telephone number [optional]" 
                 value={formData.tel} 
                 onChange={handleInputChange} 
                 onBlur={handleBlur} 
-                minLength="9" maxLength="18"
-                required 
+                minLength="9" maxLength="18" 
               />
             </fieldset>
             <p className="space1">Data is stored confidentially and will only be used for matters relating to your bookings and orders.</p>

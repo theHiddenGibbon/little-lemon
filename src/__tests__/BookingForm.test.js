@@ -204,7 +204,6 @@ test('Telephone input has correct attributes', () => {
   expect(telInput).toHaveAttribute('type', 'tel');
   expect(telInput).toHaveAttribute('minLength', '9');
   expect(telInput).toHaveAttribute('maxLength', '18');
-  expect(telInput).toHaveAttribute('required');
 });
 
 
