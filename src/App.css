@@ -220,17 +220,15 @@ article {
   padding: 1rem 0;
 }
 
-/* Target all children of main except those with the 'hero' class */
+
 main > :not(.hero) {
   transition: opacity 0.4s ease-in-out;
 }
 
-/* When fading out */
 main > :not(.hero).fade-out {
   opacity: 0;
 }
 
-/* When fading in */
 main > :not(.hero).fade-in {
   opacity: 1;
 }
