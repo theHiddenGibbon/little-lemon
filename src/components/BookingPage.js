@@ -2,9 +2,11 @@ import React, { useState, useEffect, useReducer, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import BookingForm from './BookingForm.js';
 import BookingConfirmed from './BookingConfirmed.js';
-// import BookingDataViewer from './BookingDataViewer.js';
+import BookingDataViewer from './BookingDataViewer.js';
 import scrollToSection from '../utils/scrollToSection';
 import { fetchAPI, submitAPI } from '../data/api.js';
+
+const isTesting = false; // Set to true to enable the booking data viewer
 
 const timesReducer = (state, action) => {
   switch (action.type) {
@@ -27,13 +29,17 @@ const BookingPage = ({ user, onLogin }) => {
   const [showBookings, setShowBookings] = useState(false);
   const location = useLocation();
 
-  const initialiseTimes = (date, dispatch) => {
+  // const initialiseTimes = (date, dispatch) => {
+  //   const times = fetchAPI(new Date(date));
+  //   dispatch({ type: 'update_times', payload: times });
+  // };
+  const initialiseTimes = (date) => {
     const times = fetchAPI(new Date(date));
     dispatch({ type: 'update_times', payload: times });
   };
 
   const updateTimes = useCallback((date) => {
-    initialiseTimes(date, dispatch);
+    initialiseTimes(date);
   }, []);
 
   const handleConfirm = (data) => {
@@ -52,7 +58,7 @@ const BookingPage = ({ user, onLogin }) => {
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0];
     updateTimes(today);
-  }, []);
+  }, [updateTimes]);
 
   useEffect(() => {
     return () => {
@@ -75,9 +81,9 @@ const BookingPage = ({ user, onLogin }) => {
     setBookings(storedBookings);
   }, []);
 
-  // const toggleBookings = () => {
-  //   setShowBookings(!showBookings);
-  // };
+  const toggleBookings = () => {
+    setShowBookings(!showBookings);
+  };
 
   return (
     <article id="bookings">
@@ -103,15 +109,19 @@ const BookingPage = ({ user, onLogin }) => {
           )
         )}
       </section>
-      {/* <button onClick={toggleBookings}>
-        {showBookings ? 'Hide Bookings' : 'View Bookings'}
-      </button>
-      <p>This booking data viewer is for testing purposes only.</p>
-      {showBookings && (
-        <aside className="booking">
-          <BookingDataViewer />}
-        </aside>
-      )} */}
+      {isTesting && (
+        <>
+          <button onClick={toggleBookings}>
+            {showBookings ? 'Hide Bookings' : 'View Bookings'}
+          </button>
+          <p>This booking data viewer is for testing purposes only.</p>
+          {showBookings && (
+            <aside className="booking">
+              <BookingDataViewer bookings={bookings} />
+            </aside>
+          )}
+        </>
+      )}
     </article>
   );
 };
