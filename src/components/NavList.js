@@ -1,54 +1,55 @@
 import './NavList.css';
-import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import scrollToSection from '../utils/scrollToSection';
-import scrollToTop from '../utils/scrollToTop';
+import { useNavigate } from 'react-router-dom';
 
-const sectionMap = {
-  '/': 'home',
-  '/about': 'about-full',
-  '/menu': 'menu',
-  '/bookings': 'bookings',
-  '/order': 'order',
-  '/login': 'login',
-  '/account': 'account'
-};
+const NavList = ({ classname, isLoggedIn, hideMenu, mainRef, showHeader }) => {
+  const navigate = useNavigate();
 
-const NavList = ({ classname, isLoggedIn, onLinkClick }) => {
+  const handleLinkClick = (e, targetPath) => {
+    e.preventDefault();
+    hideMenu();
 
-  const location = useLocation();
-
-  useEffect(() => {
-    const sectionId = sectionMap[location.pathname];
-    if (sectionId === "home") {
-      scrollToTop();
-    } else {
-      if (sectionId) {
-        scrollToSection(sectionId);
+    const children = Array.from(mainRef.current.children);
+    children.forEach(child => {
+      if (!child.classList.contains('hero')) {
+        child.classList.remove('fade-in');
+        child.classList.add('fade-out');
       }
-    }
-  }, [location]);
+    });
 
-  const handleLinkClick = () => {
-    if (onLinkClick && classname.includes('nav-bar')) {
-      onLinkClick();
-    }
+    window.scrollTo({
+      top: mainRef.current.offsetTop - 1,
+      behavior: "smooth",
+    });
+
+    setTimeout(() => {
+      navigate(targetPath);
+      mainRef.current.scrollIntoView({ behavior: "instant", block: "start" });
+      children.forEach(child => {
+        if (!child.classList.contains('hero')) {
+          child.classList.remove('fade-out');
+          child.classList.add('fade-in');
+        }
+      });
+    }, 400);
+    setTimeout(() => {
+      showHeader(false);
+    }, 500);
   };
 
   return (
     <menu className={classname}>
-      <li><Link to="/" onClick={handleLinkClick}>Home</Link></li>
-      <li><Link to="/about" onClick={handleLinkClick}>About</Link></li>
-      <li><Link to="/menu" onClick={handleLinkClick}>Menu</Link></li>
-      <li><Link to="/bookings" onClick={handleLinkClick}>Reservations</Link></li>
-      <li><Link to="/order" onClick={handleLinkClick}>Order Online</Link></li>
+      <li><a href="/" onClick={(e) => handleLinkClick(e, "/")}>Home</a></li>
+      <li><a href="/about" onClick={(e) => handleLinkClick(e, "/about")}>About</a></li>
+      <li><a href="/menu" onClick={(e) => handleLinkClick(e, "/menu")}>Menu</a></li>
+      <li><a href="/bookings" onClick={(e) => handleLinkClick(e, "/bookings")}>Reservations</a></li>
+      <li><a href="/order" onClick={(e) => handleLinkClick(e, "/order")}>Order Online</a></li>
       <li>
-        <Link 
-          to={isLoggedIn ? "/account" : "/login"} 
-          onClick={handleLinkClick}
+        <a
+          href={isLoggedIn ? "/account" : "/login"}
+          onClick={(e) => handleLinkClick(e, isLoggedIn ? "/account" : "/login")}
         >
           {isLoggedIn ? "Account" : "Login"}
-        </Link>
+        </a>
       </li>
     </menu>
   );

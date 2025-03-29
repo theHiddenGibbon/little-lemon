@@ -176,6 +176,10 @@
   }
 }
 
+.booking-page {
+  padding: 0;
+}
+
 .confirmation-details {
   display: grid;
   grid-template-columns: 1fr;
@@ -231,8 +235,6 @@
   width: fit-content;
   display: inline-block;
 }
-
-
 
 .login-form-overlay {
   position: absolute;

@@ -49,9 +49,9 @@ const Testimonials = () => {
   };
 
   return (
-    <section className="testimonials full-width">
-      <h3>Testimonials</h3>
-      <ul className="testimonial-list">
+    <section className="testimonials full-width" aria-live="polite">
+      <h3 id="testimonials-heading">Testimonials</h3>
+      <ul className="testimonial-list" aria-labelledby="testimonials-heading">
         {testimonialData.map((testimonial, index) => (
           <React.Fragment key={index}>
             <li
@@ -63,15 +63,16 @@ const Testimonials = () => {
               onKeyDown={(event) => handleKeyDown(event, index)}
               tabIndex={index === activeIndex ? -1 : 0}
               ref={el => cardRefs.current[index] = el}
+              aria-current={index === activeIndex ? "true" : undefined}
             >
               <div className="user-card">
-                <img src={testimonial.image} alt="user avatar" />
+                <img src={testimonial.image} alt={`${testimonial.name}'s avatar`} />
                 <h5>{testimonial.name}</h5>
               </div>
             </li>
             {index === activeIndex && (
               <li className={`review review${index} active`}>
-                <div className="rating">
+                <div className="rating" aria-label={`Rating: ${testimonial.rating} out of 5`}>
                   {[...Array(testimonial.rating)].map((_, index) => (
                     <img key={index} src={Star} alt="star" className="star" />
                   ))}

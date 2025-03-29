@@ -354,6 +354,7 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
                 type="text" 
                 id="res-note" 
                 name="note" 
+                aria-describedby="note-helper"
                 value={formData.note} 
                 rows="4" 
                 maxLength="180" 
@@ -361,7 +362,7 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
                 onBlur={handleBlur} 
                 placeholder="Add special requests or notes here. Please contact us directly beforehand for important requests."
               />
-              <p>[Optional]</p>
+              <p id="note-helper">[Optional]</p>
             </fieldset>
           </section>
         )}

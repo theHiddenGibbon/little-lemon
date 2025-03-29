@@ -9,9 +9,14 @@ import Order from './Order.js';
 import Login from './Login.js';
 import Account from './Account.js';
 
-const Main = ({ user, onLogin, onLogout }) => {
+const Main = ({ user, onLogin, onLogout, mainRef, headerHeight }) => {
   return(
-    <main className="content-grid">
+    <main 
+      ref={mainRef} 
+      style={{ top: `${headerHeight}px` }} 
+      className="content-grid" 
+      tabIndex="-1" 
+    >
       <Hero />
       <Routes>
         <Route path="/" element={<Home />} />

@@ -31,6 +31,11 @@ button:disabled:hover,
   opacity: 0.5;
 }
 
+main:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
   padding: 0;
@@ -213,4 +218,19 @@ article {
 
 .space1 {
   padding: 1rem 0;
+}
+
+/* Target all children of main except those with the 'hero' class */
+main > :not(.hero) {
+  transition: opacity 0.4s ease-in-out;
+}
+
+/* When fading out */
+main > :not(.hero).fade-out {
+  opacity: 0;
+}
+
+/* When fading in */
+main > :not(.hero).fade-in {
+  opacity: 1;
 }

@@ -66,7 +66,7 @@ const BookingPage = ({ user, onLogin }) => {
       handleConfirm(formData);
       scrollToSection("bookings");
     } else {
-      alert('Error submitting form'); // error handling to be added?
+      alert('Error submitting form');
     }
   };
 
@@ -81,7 +81,7 @@ const BookingPage = ({ user, onLogin }) => {
 
   return (
     <article id="bookings">
-      <section className="confirmation">
+      <section className="booking-page">
         <h3 className="space1">Reserve a Table</h3>
         <p>We are open every day from midday to midnight. We have a table reservation system for evening bookings, starting from 5pm.</p>
         <p className="space1">Use the form below to reserve your table with us at Little Lemon.</p>

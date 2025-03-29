@@ -55,12 +55,10 @@ const BookingConfirmed = ({ user, formData }) => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    // Check match first
     if (!validatePasswordMatch(e.target.pwconfirm)) {
       e.target.pwconfirm.reportValidity();
       return;
     }
-    // Then check requirements
     if (!validatePasswordRequirements(e.target.password)) {
       e.target.password.reportValidity();
       return;

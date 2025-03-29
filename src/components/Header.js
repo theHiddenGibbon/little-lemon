@@ -1,41 +1,82 @@
 import './Header.css';
-import { useState } from 'react';
+import { useEffect, useRef } from 'react';
 import NavList from './NavList.js';
 import Logo from '../images/logo.svg';
 import Burger from '../images/hamburger-menu.svg';
 
-const Header = ({ isLoggedIn }) => {
-  const [menuVisible, setMenuVisible] = useState(false);
+const Header = ({ isLoggedIn, mainRef, headerRef, showHeader, hideMenu, menuVisible, setMenuVisible  }) => {
+
+  const lastScrollY = useRef(0);
+  const isMenuToggling = useRef(false);
 
   const toggleMenu = () => {
+    isMenuToggling.current = true;
     setMenuVisible(!menuVisible);
+
+    setTimeout(() => {
+      isMenuToggling.current = false;
+    }, 200);
   };
 
-  const hideMenu = () => {
-    if(menuVisible) setMenuVisible(false);
+  const handleLogoClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  return(
-    <header className="content-grid">
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isMenuToggling.current) return;
+
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > headerRef.current.offsetHeight) {
+        if (currentScrollY > lastScrollY.current) {
+          showHeader(false);
+        } else {
+          showHeader(true);
+        }
+      } else {
+        showHeader(true);
+      }
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [showHeader]);
+
+  return (
+    <header
+      ref={headerRef}
+      className="content-grid header"
+    >
       <nav className="head-nav">
         <div className="logo-container">
-          <button 
+          <button
             className="burger" 
             onClick={toggleMenu} 
             aria-expanded={menuVisible} 
-            aria-controls="main-menu"
+            aria-controls="main-menu" 
+            aria-label={menuVisible ? "Close navigation menu" : "Open navigation menu"} 
+            title={menuVisible ? "Close navigation menu" : "Open navigation menu"} 
           >
             <img src={Burger} alt="Menu icon" className="burger-icon" />
           </button>
-          <img src={Logo} alt="Little Lemon logo" className="logo" />
+          <a href="/" onClick={handleLogoClick} className="logo-link">
+            <img src={Logo} alt="Little Lemon logo" className="logo" />
+          </a>
         </div>
-        <NavList 
+        <NavList
           classname={`nav-bar ${menuVisible ? 'visible' : ''}`} 
           isLoggedIn={isLoggedIn} 
-          onLinkClick={hideMenu} 
+          mainRef={mainRef} 
+          headerRef={headerRef} 
+          showHeader={showHeader} 
+          hideMenu={hideMenu} 
         />
       </nav>
     </header>
   );
 };
+
 export default Header;

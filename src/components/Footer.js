@@ -11,7 +11,7 @@ import PinterestIcon from '../icons/square-pinterest-brands-solid.svg';
 import BlueSkyIcon from '../icons/square-bluesky-brands-solid.svg';
 import WhatsAppIcon from '../icons/square-whatsapp-brands-solid.svg';
 
-const Footer = ({ isLoggedIn }) => {
+const Footer = ({ isLoggedIn, mainRef, headerRef, showHeader, hideMenu }) => {
   return(
     <footer className="content-grid">
       <section className="full-width bg-green">
@@ -19,7 +19,14 @@ const Footer = ({ isLoggedIn }) => {
           <img src={Logo} alt="Little Lemon logo" className="footer-logo" />
           <nav className="foot-nav">
             <h5 className="no-wrap">Site Navigation</h5>
-            <NavList classname="footer-nav"/>
+            <NavList 
+              classname="footer-nav" 
+              isLoggedIn={isLoggedIn} 
+              mainRef={mainRef} 
+              headerRef={headerRef} 
+              showHeader={showHeader} 
+              hideMenu={hideMenu} 
+            />
           </nav>
           <address>
             <div>
@@ -37,7 +44,7 @@ const Footer = ({ isLoggedIn }) => {
                   <ul className="group-contact">
                     <li className="contact-detail">
                       <img src={PhoneIcon} alt="phone icon" />
-                      <p><a href="tel:+1123456789012" className="contact-link">(123) 456-7890 12</a></p>
+                      <p><a href="tel:+123456789012" className="contact-link">(123) 456-7890 12</a></p>
                     </li>
                     <li className="contact-detail">
                       <img src={EmailIcon} alt="email icon" />
