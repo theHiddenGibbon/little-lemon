@@ -10,6 +10,8 @@ const Account = ({ user, onLogout }) => {
     }
   }, [user, navigate]);
 
+  console.log(user);
+
   const handleLogout = () => {
     onLogout();
     navigate('/');
@@ -27,13 +29,6 @@ const Account = ({ user, onLogout }) => {
         <p>Name: {user.firstname} {user.lastname}</p>
         <p>Email: {user.email}</p>
         <p>Tel: {user.telephone}</p>
-        <p>
-          Address:<br/>
-          {user.address1}<br/>
-          {user.address2}<br/>
-          {user.address3}<br/>
-          {user.state}, {user.zip}
-        </p>
       </section>
 
       <section className="my-bookings">

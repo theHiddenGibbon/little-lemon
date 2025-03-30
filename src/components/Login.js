@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { users } from '../data/users';
+import { useNavigate, useLocation } from 'react-router-dom';
+// import { users } from '../data/users';
 import './Login.css';
 
 const Login = ({ onLogin, isModal }) => {
@@ -8,17 +8,31 @@ const Login = ({ onLogin, isModal }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const user = users.find(u => u.email === email && u.password === password);
+    
+  //   if (user) {
+  //     setError('');
+  //     onLogin(user);
+  //     if (!isModal) {
+  //       navigate('/');
+  //     }
+  //   } else {
+  //     setError('Invalid email or password');
+  //   }
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const user = users.find(u => u.email === email && u.password === password);
-    
+    const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+    const user = storedUsers.find(u => u.email === email && u.password === password);
     if (user) {
       setError('');
       onLogin(user);
-      if (!isModal) {
-        navigate('/');
-      }
+      navigate('/Account');
     } else {
       setError('Invalid email or password');
     }
@@ -30,7 +44,7 @@ const Login = ({ onLogin, isModal }) => {
       className={`login-section ${isModal ? 'modal' : ''}`}
     >
       <h3>Login</h3>
-      <form onSubmit={handleSubmit}>
+      {location.state?.message && <p className="success-message">{location.state.message}</p>}      <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="email">Email</label>
           <input 

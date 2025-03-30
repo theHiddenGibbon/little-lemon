@@ -63,7 +63,19 @@ const BookingConfirmed = ({ user, formData }) => {
       e.target.password.reportValidity();
       return;
     }
-    navigate('/login');
+    const newUser = {
+      firstname: formData.firstname,
+      lastname: formData.lastname,
+      email: formData.email,
+      password: password,
+      telephone: formData.telephone
+    };
+    const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+    storedUsers.push(newUser);
+    localStorage.setItem('users', JSON.stringify(storedUsers));
+    navigate('/login', {
+      state: { message: 'Registration complete, please log in to confirm.' },
+    });
   };
 
   const checkValidation = (currentPassword, currentConfirmPassword) => {

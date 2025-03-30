@@ -1,0 +1,11 @@
+.order {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: min-content;
+  column-gap: 2rem;
+  row-gap: 1rem;
+}
+
+.order > p {
+  padding: 0.5rem 0rem;
+}

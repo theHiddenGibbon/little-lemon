@@ -1,0 +1,15 @@
+.menu {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: min-content;
+  column-gap: 2rem;
+  row-gap: 1rem;
+}
+
+.menu > h4 {
+  padding: 2rem 2rem 0rem;
+}
+
+.menu > ul > li {
+  padding: 0.5rem 2rem;
+}

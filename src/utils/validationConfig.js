@@ -70,7 +70,7 @@ export const validationConfig = {
     emptyMessage: 'Email is required'
   },
   tel: {
-    required: true,
+    required: false,
     type: 'string',
     pattern: /^\+?[\d\s-]{9,18}$/,
     minLength: 9,

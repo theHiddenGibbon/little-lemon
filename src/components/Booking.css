@@ -184,7 +184,7 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.5rem;
-  background-color: var(--secondary3);
+  background-color: var(--primary2);
   margin: 0rem -1rem;
   padding: 1rem 1rem;
 }
