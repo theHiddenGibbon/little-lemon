@@ -15,7 +15,7 @@ export const validationConfig = {
     message: 'Please enter the number of guests, max 10. Contact us directly for bookings of more than 10.',
     emptyMessage: 'Number of guests is required'
   },
-  
+
   date: {
     required: true,
     type: 'date',

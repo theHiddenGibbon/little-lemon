@@ -10,21 +10,6 @@ const Login = ({ onLogin, isModal }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const user = users.find(u => u.email === email && u.password === password);
-    
-  //   if (user) {
-  //     setError('');
-  //     onLogin(user);
-  //     if (!isModal) {
-  //       navigate('/');
-  //     }
-  //   } else {
-  //     setError('Invalid email or password');
-  //   }
-  // };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const storedUsers = JSON.parse(localStorage.getItem('users')) || [];

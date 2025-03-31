@@ -29,11 +29,7 @@ const BookingPage = ({ user, onLogin }) => {
   const [showBookings, setShowBookings] = useState(false);
   const location = useLocation();
 
-  // const initialiseTimes = (date, dispatch) => {
-  //   const times = fetchAPI(new Date(date));
-  //   dispatch({ type: 'update_times', payload: times });
-  // };
-  const initialiseTimes = (date) => {
+   const initialiseTimes = (date) => {
     const times = fetchAPI(new Date(date));
     dispatch({ type: 'update_times', payload: times });
   };

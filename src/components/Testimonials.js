@@ -38,7 +38,7 @@ const Testimonials = () => {
   const handleCardClick = (index) => {
     setActiveIndex(index);
     if (cardRefs.current[index]) {
-      cardRefs.current[index].blur(); // Remove focus from the clicked element
+      cardRefs.current[index].blur();
     }
   };
 

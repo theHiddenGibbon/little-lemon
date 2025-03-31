@@ -8,7 +8,7 @@ const Highlights = () => {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    navigate('/order'); // Navigate to the Order page
+    navigate('/order');
   };
 
   const scrollLeft = () => {

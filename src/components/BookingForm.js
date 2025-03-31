@@ -199,7 +199,7 @@ const BookingForm = ({ availableTimes, updateTimes, user, onLogin, submitForm })
     } else {
       field.classList.remove('validation-required');
     }
-    field.reportValidity(); // Ensure the browser's default validation message is shown
+    field.reportValidity();
   };
 
   const handleBlur = (e) => {
